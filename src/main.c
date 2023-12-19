@@ -44,9 +44,20 @@ void ft_hook(void* param)
 
 // -----------------------------------------------------------------------------
 
-int32_t main(int32_t argc, const char* argv[])
+int32_t main(int32_t argc, char* argv[])
 {
 	mlx_t* mlx;
+	t_game	game;
+
+	game.map = malloc (sizeof(t_map));
+	game.argv = argv;
+	game.argc = argc;
+	game.map->x = 0;
+	game.map->y = 0;
+	game.map->x_size = 0;
+	game.map->y_size = 0;
+
+	map(&game);
 
 	// Gotta error check this stuff
 	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
