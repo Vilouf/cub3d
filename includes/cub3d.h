@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:32:51 by velbling          #+#    #+#             */
-/*   Updated: 2023/12/11 16:24:14 by velbling         ###   ########.fr       */
+/*   Updated: 2024/01/16 16:50:28 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <unistd.h>
  #include <fcntl.h>
 
-typedef struct s_map
+typedef struct	s_map
 {
 	int		x;
 	int		y;
@@ -33,12 +33,20 @@ typedef struct s_map
 	char	**map;
 }	t_map;
 
-typedef struct s_game
+typedef struct	s_game
 {
 	t_map	*map;
 	int		argc;
 	char	**argv;
 }	t_game;
+
+typedef struct	s_player
+{
+	int	x;
+	int	y;
+	int	angle;
+}	t_player;
+
 
 char	*get_next_line(int fd);
 void	map(t_game *game);

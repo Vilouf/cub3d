@@ -9,19 +9,43 @@ int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
     return (r << 24 | g << 16 | b << 8 | a);
 }
 
-void ft_randomize(void* param)
+void spread_pixels(int x, int y, uint32_t color)
 {
-	for (int32_t i = 0; i < image->width; ++i)
+	int i = 0;
+	int j = 0;
+
+	while (i < 64)
 	{
-		for (int32_t y = 0; y < image->height; ++y)
+		while (j < 64)
 		{
-			uint32_t color = ft_pixel(
-				0xFF, // R
-				0xAA, // G
-				0x00, // B
-				0xFF  // A
-			);
-			mlx_put_pixel(image, i, y, color);
+			mlx_put_pixel(image, x + i, y + j, color);
+			j++;
+		}
+		i++;
+		j = 0;
+	}
+}
+
+void ft_putmap(void* param)
+{
+	t_game *game;
+
+	game = param;
+
+	for (int x = 0; game->map->map[x]; x++)
+	{
+		for (int y = 0; game->map->map[x][y]; y++)
+		{
+			if (game->map->map[x][y] == '1')
+			{
+				uint32_t color = ft_pixel(
+					0xFF, // R
+					0xAA, // G
+					0x00, // B
+					0xFF  // A
+				);
+				spread_pixels(x * 64, y * 64, color);
+			}
 		}
 	}
 }
@@ -32,14 +56,14 @@ void ft_hook(void* param)
 
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(mlx);
-	if (mlx_is_key_down(mlx, MLX_KEY_UP))
-		image->instances[0].y -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-		image->instances[0].y += 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-		image->instances[0].x -= 5;
-	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-		image->instances[0].x += 5;
+	// if (mlx_is_key_down(mlx, MLX_KEY_UP))
+	// 	image->instances[0].y -= 5;
+	// if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+	// 	image->instances[0].y += 5;
+	// if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+	// 	image->instances[0].x -= 5;
+	// if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
+	// 	image->instances[0].x += 5;
 }
 
 // -----------------------------------------------------------------------------
@@ -59,13 +83,22 @@ int32_t main(int32_t argc, char* argv[])
 
 	map(&game);
 
+	for (int i = 0; game.map->map[i]; i++)
+	{
+		for (int j = 0; game.map->map[i][j]; j++)
+		{
+			printf("%c", game.map->map[i][j]);
+		}
+		printf("\n");
+	}
+
 	// Gotta error check this stuff
-	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
+	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", false)))
 	{
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	if (!(image = mlx_new_image(mlx, 128, 128)))
+	if (!(image = mlx_new_image(mlx, 1920, 1080)))
 	{
 		mlx_close_window(mlx);
 		puts(mlx_strerror(mlx_errno));
@@ -78,7 +111,8 @@ int32_t main(int32_t argc, char* argv[])
 		return(EXIT_FAILURE);
 	}
 	
-	mlx_loop_hook(mlx, ft_randomize, mlx);
+	ft_putmap(&game);
+
 	mlx_loop_hook(mlx, ft_hook, mlx);
 
 	mlx_loop(mlx);
