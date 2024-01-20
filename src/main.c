@@ -26,7 +26,26 @@ void spread_pixels(int x, int y, uint32_t color)
 	}
 }
 
-void ft_putmap(void* param)
+void	init_player_pos(t_game *game)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (i < 16)
+	{
+		while (j < 16)
+		{
+			mlx_put_pixel(image, game->player->x_pos + i, game->player->y_pos + j, 0xFF0000FF);
+			j++;
+		}
+		i++;
+		j = 0;
+	}
+}
+
+void ft_init_map(void* param)
 {
 	t_game *game;
 
@@ -38,42 +57,128 @@ void ft_putmap(void* param)
 		{
 			if (game->map->map[x][y] == '1')
 			{
-				uint32_t color = ft_pixel(
-					0xFF, // R
-					0xAA, // G
-					0x00, // B
-					0xFF  // A
-				);
-				spread_pixels(x * 64, y * 64, color);
+				spread_pixels(x * 64, y * 64, 0xFFAA00FF);
+			}
+			else if (game->map->map[x][y] == 'E')
+			{
+				game->player->x_pos = (x * 64) + 24;
+				game->player->y_pos = (y * 64) + 24;
+				game->player->angle = 0;
+				init_player_pos(game);
 			}
 		}
 	}
 }
 
-void ft_hook(void* param)
+void put_image(void* param)
 {
-	mlx_t* mlx = param;
+	t_game *game;
+	int i, j;
 
-	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(mlx);
-	// if (mlx_is_key_down(mlx, MLX_KEY_UP))
-	// 	image->instances[0].y -= 5;
-	// if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-	// 	image->instances[0].y += 5;
-	// if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-	// 	image->instances[0].x -= 5;
-	// if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-	// 	image->instances[0].x += 5;
+	i = 0;
+	j = 0;
+	game = param;
+	mlx_delete_image(game->mlx, image);
+	image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	for (int x = 0; game->map->map[x]; x++)
+	{
+		for (int y = 0; game->map->map[x][y]; y++)
+		{
+			if (game->map->map[x][y] == '1')
+			{
+				spread_pixels(x * 64, y * 64, 0xFFAA00FF);
+			}
+		}
+	}
+	while (i < 16)
+	{
+		while (j < 16)
+		{
+			mlx_put_pixel(image, game->player->x_pos + i, game->player->y_pos + j, 0xFF0000FF);
+			j++;
+		}
+		i++;
+		j = 0;
+	}
+	i = 0;
+	j = 0;
+	while (i < 100)
+	{
+		mlx_put_pixel(image, (game->player->x_pos + i * cos(game->player->angle)) + 8, (game->player->y_pos + j * sin(game->player->angle)) + 8, 0x00FFFFFF);
+		i++;
+		j++;
+	}
+	mlx_image_to_window(game->mlx, image, 0, 0);
 }
 
-// -----------------------------------------------------------------------------
-
-int32_t main(int32_t argc, char* argv[])
+int	ft_movement(mlx_t *mlx)
 {
-	mlx_t* mlx;
+	return(mlx_is_key_down(mlx, MLX_KEY_W) 
+		|| mlx_is_key_down(mlx, MLX_KEY_S)
+		|| mlx_is_key_down(mlx, MLX_KEY_A)
+		|| mlx_is_key_down(mlx, MLX_KEY_D)
+		|| mlx_is_key_down(mlx, MLX_KEY_RIGHT)
+		|| mlx_is_key_down(mlx, MLX_KEY_LEFT));
+}
+
+void	ft_hook(void* param)
+{
+	t_game	*game;
+
+	game = param;
+	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
+		mlx_close_window(game->mlx);
+	if (ft_movement(game->mlx))
+	{
+		if (mlx_is_key_down(game->mlx, MLX_KEY_W))
+		{
+			game->player->x_pos -= 2 * -cos(game->player->angle);
+			game->player->y_pos -= 2 * -sin(game->player->angle);
+		}
+		if (mlx_is_key_down(game->mlx, MLX_KEY_S))
+		{
+			game->player->x_pos += 2 * -cos(game->player->angle);
+			game->player->y_pos += 2 * -sin(game->player->angle);
+		}
+		if (mlx_is_key_down(game->mlx, MLX_KEY_A))
+		{
+			game->player->x_pos -= 2 * -sin(game->player->angle);
+			game->player->y_pos -= 2 * cos(game->player->angle);
+		}
+		if (mlx_is_key_down(game->mlx, MLX_KEY_D))
+		{
+			game->player->x_pos += 2 * -sin(game->player->angle);
+			game->player->y_pos += 2 * cos(game->player->angle);
+		}
+		if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
+		{
+			// game->player->angle -= M_PI_2 / 16;
+			// if (game->player->angle < 0)
+			// 	game->player->angle = 2 * M_PI;
+			game->player->angle += M_PI_2 / 16;
+			if (game->player->angle > 2 * M_PI)
+				game->player->angle = 0;
+		}
+		if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
+		{
+			// game->player->angle += M_PI_2 / 6;
+			// if (game->player->angle > 2 * M_PI)
+			// 	game->player->angle = 0;
+			game->player->angle -= M_PI_2 / 16;
+			if (game->player->angle < 0)
+				game->player->angle = 2 * M_PI;
+		}
+		put_image(game);
+	}
+	printf("%f\n", game->player->angle);
+}
+
+int main(int argc, char* argv[])
+{
 	t_game	game;
 
 	game.map = malloc (sizeof(t_map));
+	game.player = malloc (sizeof(t_player));
 	game.argv = argv;
 	game.argc = argc;
 	game.map->x = 0;
@@ -93,29 +198,28 @@ int32_t main(int32_t argc, char* argv[])
 	}
 
 	// Gotta error check this stuff
-	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", false)))
+	if (!(game.mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
 	{
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	if (!(image = mlx_new_image(mlx, 1920, 1080)))
+	if (!(image = mlx_new_image(game.mlx, WIDTH, HEIGHT)))
 	{
-		mlx_close_window(mlx);
+		mlx_close_window(game.mlx);
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	if (mlx_image_to_window(mlx, image, 0, 0) == -1)
+	if (mlx_image_to_window(game.mlx, image, 0, 0) == -1)
 	{
-		mlx_close_window(mlx);
+		mlx_close_window(game.mlx);
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	
-	ft_putmap(&game);
 
-	mlx_loop_hook(mlx, ft_hook, mlx);
+	ft_init_map(&game);
 
-	mlx_loop(mlx);
-	mlx_terminate(mlx);
+	mlx_loop_hook(game.mlx, ft_hook, &game);
+	mlx_loop(game.mlx);
+	mlx_terminate(game.mlx);
 	return (EXIT_SUCCESS);
 }

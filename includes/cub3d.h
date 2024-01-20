@@ -21,8 +21,9 @@
 # include <stdlib.h>
 # include <stdbool.h>
 # include <../MLX42/include/MLX42/MLX42.h>
-#include <unistd.h>
- #include <fcntl.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <math.h>
 
 typedef struct	s_map
 {
@@ -33,20 +34,21 @@ typedef struct	s_map
 	char	**map;
 }	t_map;
 
+typedef struct	s_player
+{
+	float	x_pos;
+	float	y_pos;
+	double	angle;	
+}	t_player;
+
 typedef struct	s_game
 {
-	t_map	*map;
+	mlx_t		*mlx;
+	t_map		*map;
+	t_player	*player;
 	int		argc;
 	char	**argv;
 }	t_game;
-
-typedef struct	s_player
-{
-	int	x;
-	int	y;
-	int	angle;
-}	t_player;
-
 
 char	*get_next_line(int fd);
 void	map(t_game *game);
@@ -54,7 +56,8 @@ size_t	ft_strlen(char const *str);
 char	*ft_strchr(char *s, int c);
 char	*ft_strjoin(char *s1, char *s2);
 
-# define WIDTH 512
-# define HEIGHT 512
+# define WIDTH 1920
+# define HEIGHT 1080
+# define FOV 90
 
 #endif

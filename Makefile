@@ -18,7 +18,7 @@ FILES = main \
 		map
 
 #MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -framework Cocoa -framework OpenGL -framework IOKit
-MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw #-framework Cocoa -framework OpenGL -framework IOKit
+MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -lm#-framework Cocoa -framework OpenGL -framework IOKit
 
 SRC = $(addprefix src/, $(addsuffix .c, $(FILES)))
 
@@ -32,7 +32,7 @@ $(NAME): $(OBJ)
 	gcc $(GFLAG) $(OBJ) -o $(NAME) $(MLX)
 
 .c.o:
-	gcc $(gFLAGS) -c -o $@ $< -I includes
+	gcc $(GFLAG) -c -o $@ $< -I includes
 
 clean:
 	rm -f $(OBJ)
@@ -41,6 +41,9 @@ fclean: clean
 	rm -f $(NAME)
 
 r: re
+	./$(NAME) maps/test.cub
+
+run:
 	./$(NAME) maps/test.cub
 
 re: fclean all
