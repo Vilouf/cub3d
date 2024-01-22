@@ -1,4 +1,4 @@
-#include "cub3d.h"
+ #include "cub3d.h"
 
 static mlx_image_t* image;
 
@@ -57,17 +57,45 @@ void ft_init_map(void* param)
 		{
 			if (game->map->map[x][y] == '1')
 			{
-				spread_pixels(x * 64, y * 64, 0xFFAA00FF);
+				spread_pixels(y * 64, x * 64, 0xFFAA00FF);
 			}
 			else if (game->map->map[x][y] == 'E')
 			{
-				game->player->x_pos = (x * 64) + 24;
-				game->player->y_pos = (y * 64) + 24;
+				game->player->x_pos = (y * 64) + 24;
+				game->player->y_pos = (x * 64) + 24;
 				game->player->angle = 0;
 				init_player_pos(game);
 			}
 		}
 	}
+}
+
+int	collision(t_game *game, double x_pos, double y_pos)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < game->map->y_size)
+	{
+		x = 0;
+		while (game->map->map[y][x])
+		{
+			if (game->map->map[y][x] == '1')
+			{
+				if (y_pos <= (double) y * 64 + 64 \
+					&& y_pos >= (double) y * 64 \
+					&& x_pos <= (double) x * 64 + 64 \
+					&& x_pos >= (double) x * 64)
+				{
+					return (0);
+				}
+			}
+			x++;
+		}
+		y++;
+	}
+	return (1);
 }
 
 void put_image(void* param)
@@ -86,7 +114,7 @@ void put_image(void* param)
 		{
 			if (game->map->map[x][y] == '1')
 			{
-				spread_pixels(x * 64, y * 64, 0xFFAA00FF);
+				spread_pixels(y * 64, x * 64, 0xFFAA00FF);
 			}
 		}
 	}
@@ -100,13 +128,24 @@ void put_image(void* param)
 		i++;
 		j = 0;
 	}
-	i = 0;
-	j = 0;
-	while (i < 100)
+	double	ray_angle = M_PI / 3 * -1;
+	while (ray_angle < M_PI / 3)
 	{
-		mlx_put_pixel(image, (game->player->x_pos + i * cos(game->player->angle)) + 8, (game->player->y_pos + j * sin(game->player->angle)) + 8, 0x00FFFFFF);
-		i++;
-		j++;
+		i = 0;
+		j = 0;
+		while (i < 2000)
+		{
+			if (collision(game, (game->player->x_pos + i * cos(game->player->angle + ray_angle)) + 8, (game->player->y_pos + j * sin(game->player->angle + ray_angle)) + 8))
+			{
+				mlx_put_pixel(image, (game->player->x_pos + i * cos(game->player->angle + ray_angle)) + 8, \
+					(game->player->y_pos + j * sin(game->player->angle + ray_angle)) + 8, 0x00FFFFFF);
+			}
+			else
+				break ;
+			i++;
+			j++;
+		}
+		ray_angle += M_PI / 240;
 	}
 	mlx_image_to_window(game->mlx, image, 0, 0);
 }
@@ -155,7 +194,7 @@ void	ft_hook(void* param)
 			// game->player->angle -= M_PI_2 / 16;
 			// if (game->player->angle < 0)
 			// 	game->player->angle = 2 * M_PI;
-			game->player->angle += M_PI_2 / 16;
+			game->player->angle += M_PI_2 / 32;
 			if (game->player->angle > 2 * M_PI)
 				game->player->angle = 0;
 		}
@@ -164,13 +203,12 @@ void	ft_hook(void* param)
 			// game->player->angle += M_PI_2 / 6;
 			// if (game->player->angle > 2 * M_PI)
 			// 	game->player->angle = 0;
-			game->player->angle -= M_PI_2 / 16;
+			game->player->angle -= M_PI_2 / 32;
 			if (game->player->angle < 0)
 				game->player->angle = 2 * M_PI;
 		}
 		put_image(game);
 	}
-	printf("%f\n", game->player->angle);
 }
 
 int main(int argc, char* argv[])
