@@ -56,8 +56,8 @@ size_t	ft_strlen(char const *str);
 char	*ft_strchr(char *s, int c);
 char	*ft_strjoin(char *s1, char *s2);
 
-# define WIDTH 1920
-# define HEIGHT 1080
-# define FOV 90
+# define WIDTH 960
+# define HEIGHT 720
+# define FOV 60
 
 #endif
