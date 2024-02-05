@@ -48,6 +48,7 @@ typedef struct	s_game
 	t_player	*player;
 	int		argc;
 	char	**argv;
+	int	wall_color;
 }	t_game;
 
 char	*get_next_line(int fd);

@@ -88,6 +88,7 @@ int	collision(t_game *game, double x_pos, double y_pos)
 					&& x_pos <= (double) x * 64 + 64 \
 					&& x_pos >= (double) x * 64)
 				{
+					// game->wall_color = ft_wall_color(x_pos, y_pos, (double) x * 64 + 32, (double) y * 64 + 32);
 					return (0);
 				}
 			}
@@ -101,82 +102,102 @@ int	collision(t_game *game, double x_pos, double y_pos)
 void	ft_cast_ray(t_game *game, double ray_length, int ray_pos)
 {
 	int	i;
-	double	wall_top, wall_bottom;
+	// double	wall_top, wall_bottom;
+	double wall_size;
 
 	i = 0;
 	(void) game;
-	(void) ray_length;
 	if (ray_pos >= 960)
 		return ;
-	wall_top = (HEIGHT / 2) - ((1 / ray_length) * 100000);
-	wall_bottom =(HEIGHT / 2) + ((1 / ray_length) * 100000);
-	while (i < HEIGHT)
+	wall_size = 40000 / ray_length;
+	if (wall_size > HEIGHT)
+		wall_size = HEIGHT;
+	i = HEIGHT / 2 - wall_size / 2;
+	// wall_top = -ray_length / 2 + 1000 / 2; //-lineHeight / 2 + 1000 / 2;
+	// wall_bottom = ray_length / 2 + 1000 / 2;
+	while (i < HEIGHT / 2 + wall_size / 2)
 	{
-		if (i > wall_top && i < wall_bottom)
-		{
-			mlx_put_pixel(image, ray_pos, i, 0x00FFFFFF);
-		}
+		mlx_put_pixel(image, ray_pos, i, game->wall_color);
 		i++;
+	}
+}
+
+int	ft_wall_color(double ray_length, double last_ray)
+{
+	if (ray_length - last_ray <= 0.5)
+	{
+		
 	}
 }
 
 void 	put_image(void* param)
 {
 	t_game *game;
-	int i, j;
+	// int i, j;
 
-	i = 0;
-	j = 0;
+	// i = 0;
+	// j = 0;
 	game = param;
 	mlx_delete_image(game->mlx, image);
 	image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	for (int x = 0; game->map->map[x]; x++)
-	{
-		for (int y = 0; game->map->map[x][y]; y++)
-		{
-			if (game->map->map[x][y] == '1')
-			{
-				spread_pixels(y * 16, x * 16, 0xFFAA00FF);
-			}
-		}
-	}
-	while (i < 4)
-	{
-		while (j < 4)
-		{
-			mlx_put_pixel(image, (game->player->x_pos / 4) + i, (game->player->y_pos / 4) + j, 0xFF0000FF);
-			j++;
-		}
-		i++;
-		j = 0;
-	}
-	double	ray_angle = M_PI / 3 * -1;
+	double	ray_angle = game->player->angle - 30 * 0.0174533 - 0.0174533;
 	double	ray_length = 0;
+	static double	last_ray;
+	int	invisible_ray = 0;
 	int		ray_pos = 0;
 	int k = 0;
-	while (ray_angle < M_PI / 3)
+	game->wall_color = 0xFFAA00FF;
+
+	float px, py;
+	while (ray_pos < WIDTH)
 	{
-		i = 0;
 		k = 0;
-		j = 0;
-		while (i < 2000)
+		px = game->player->x_pos;
+		py = game->player->y_pos;
+		// if (game->player->angle < 0)
+		// 	game->player->angle += 2 * M_PI;
+		// if (game->player->angle > 2 * M_PI)
+		// 	game->player->angle -= 2 * M_PI;
+		while (collision(game, px += cos(ray_angle), py += sin(ray_angle)))
 		{
-			if (collision(game, (game->player->x_pos + i * cos(game->player->angle + ray_angle)) + 8, (game->player->y_pos + j * sin(game->player->angle + ray_angle)) + 8))
-			{
-				// mlx_put_pixel(image, (game->player->x_pos + i * cos(game->player->angle + ray_angle)) + 8,
-				// 	(game->player->y_pos + j * sin(game->player->angle + ray_angle)) + 8, 0x00FFFFFF);
-				ray_length++;
-			}
-			else
-				break ;
-			i++;
-			j++;
+				// mlx_put_pixel(image, px / 4 + 8,
+				//  	py / 4 + 8, 0x00FFFFFF);
+				px += cos(ray_angle);
+				py += sin(ray_angle);
 		}
-		while (k < 6)
+		ray_length = sqrt((px - game->player->x_pos) * (px - game->player->x_pos) + (py - game->player->y_pos) * (py - game->player->y_pos));
+		ray_length *= cos(game->player->angle - ray_angle);
+		// printf("%f,%f,%f\n", game->player->angle, ray_angle ,ray_length);
+		if (invisible_ray == 1)
+			game->wall_color = ft_wall_color(ray_length, last_ray);
+		while (k < 6 && invisible_ray)
 			ft_cast_ray(game, ray_length, ray_pos+(k++));
 		ray_pos+=k;
-		ray_angle += M_PI / 240;
+		ray_angle += M_PI / 400;
+		invisible_ray = 1;
 	}
+	// for (int x = 0; game->map->map[x]; x++)
+	// {
+	// 	for (int y = 0; game->map->map[x][y]; y++)
+	// 	{
+	// 		if (game->map->map[x][y] == '1')
+	// 		{
+	// 			spread_pixels(y * 16, x * 16, 0xFFAA00FF);
+	// 		}
+	// 	}
+	// }
+	// i = 0;
+	// j = 0;
+	// while (i < 4)
+	// {
+	// 	while (j < 4)
+	// 	{
+	// 		mlx_put_pixel(image, (game->player->x_pos / 4) + i, (game->player->y_pos / 4) + j, 0xFF0000FF);
+	// 		j++;
+	// 	}
+	// 	i++;
+	// 	j = 0;
+	// }
 	mlx_image_to_window(game->mlx, image, 0, 0);
 }
 
@@ -224,18 +245,18 @@ void	ft_hook(void* param)
 			// game->player->angle -= M_PI_2 / 16;
 			// if (game->player->angle < 0)
 			// 	game->player->angle = 2 * M_PI;
-			game->player->angle += M_PI_2 / 32;
+			game->player->angle += M_PI / 32;
 			if (game->player->angle > 2 * M_PI)
-				game->player->angle = 0;
+				game->player->angle -= 2 * M_PI;
 		}
 		if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
 		{
 			// game->player->angle += M_PI_2 / 6;
 			// if (game->player->angle > 2 * M_PI)
 			// 	game->player->angle = 0;
-			game->player->angle -= M_PI_2 / 32;
+			game->player->angle -= M_PI / 32;
 			if (game->player->angle < 0)
-				game->player->angle = 2 * M_PI;
+				game->player->angle += 2 * M_PI;
 		}
 	}
 	put_image(game);
