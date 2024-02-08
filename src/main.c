@@ -70,33 +70,9 @@ void ft_init_map(void* param)
 	}
 }
 
-int	collision(t_game *game, double x_pos, double y_pos)
+double	dist(double x1, double y1, double x2, double y2)
 {
-	int	x;
-	int	y;
-
-	y = 0;
-	while (y < game->map->y_size)
-	{
-		x = 0;
-		while (game->map->map[y][x])
-		{
-			if (game->map->map[y][x] == '1')
-			{
-				if (y_pos <= (double) y * 64 + 64 \
-					&& y_pos >= (double) y * 64 \
-					&& x_pos <= (double) x * 64 + 64 \
-					&& x_pos >= (double) x * 64)
-				{
-					// game->wall_color = ft_wall_color(x_pos, y_pos, (double) x * 64 + 32, (double) y * 64 + 32);
-					return (0);
-				}
-			}
-			x++;
-		}
-		y++;
-	}
-	return (1);
+	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }
 
 void	ft_cast_ray(t_game *game, double ray_length, int ray_pos)
@@ -122,12 +98,65 @@ void	ft_cast_ray(t_game *game, double ray_length, int ray_pos)
 	}
 }
 
-int	ft_wall_color(double ray_length, double last_ray)
+double	next_point(t_game *game, double angle, char point)
 {
-	if (ray_length - last_ray <= 0.5)
+	double	x;
+	double	y;
+
+	angle += M_PI / 480;
+	x = game->player->x_pos;
+	y = game->player->y_pos;
+	if (game->map->map[(int)(y / 64)][(int)(x / 64)] == '1')
 	{
-		
+		x += cos(angle);
+		y += sin(angle);
 	}
+	if (point == 'x')
+		return (x);
+	return (y);
+}
+
+static void	ft_gendarmes(t_game *game)
+{
+	if (fabs(game->ray->last_ray
+			- dist(game->player->x_pos, game->player->y_pos, game->ray->x, game->ray->y)
+			*cos(game->player->angle - game->ray->angle)) < 0.5)
+		game->ray->jsp = fabs(game->ray->last_x - game->ray->x)
+			< fabs(game->ray->last_y - game->ray->y);
+	else
+		game->ray->jsp = fabs(game->ray->x
+				- next_point(game, game->ray->angle, 'x'))
+			< fabs(game->ray->y - next_point(game, game->ray->angle, 'y'));
+}
+
+void	save(t_game *game)
+{
+	game->ray->last_ray = dist(game->player->x_pos, \
+			game->player->y_pos, game->ray->x, game->ray->y)
+		*cos(game->player->angle - game->ray->angle);
+	game->ray->last_x = game->ray->x;
+	game->ray->last_y = game->ray->y;
+}
+
+int	choose_texture(t_game *game, float angle)
+{
+	// printf("%d, %f\n", game->ray->jsp, angle);
+	if (game->ray->jsp == 0)
+	{
+		if (angle > 0 && angle < M_PI)
+			return (0xFF0000FF);
+		else
+			return (0x00FF00FF);
+	}
+	else
+	{
+		if (angle > M_PI / 2 && angle < 3 * M_PI / 2)
+			return (0x0000FFFF);
+		else
+			return (0x00FFFFFF);
+	}
+	printf("AAAAAAAA\n");
+	return (1);
 }
 
 void 	put_image(void* param)
@@ -140,40 +169,45 @@ void 	put_image(void* param)
 	game = param;
 	mlx_delete_image(game->mlx, image);
 	image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	double	ray_angle = game->player->angle - 30 * 0.0174533 - 0.0174533;
-	double	ray_length = 0;
-	static double	last_ray;
+	game->ray->angle = game->player->angle - 30 * 0.0174533 - 0.0174533;
+	game->ray->length = 0;
+	// static double	last_ray;
 	int	invisible_ray = 0;
 	int		ray_pos = 0;
 	int k = 0;
 	game->wall_color = 0xFFAA00FF;
 
-	float px, py;
 	while (ray_pos < WIDTH)
 	{
 		k = 0;
-		px = game->player->x_pos;
-		py = game->player->y_pos;
-		// if (game->player->angle < 0)
-		// 	game->player->angle += 2 * M_PI;
-		// if (game->player->angle > 2 * M_PI)
-		// 	game->player->angle -= 2 * M_PI;
-		while (collision(game, px += cos(ray_angle), py += sin(ray_angle)))
+		game->ray->x = game->player->x_pos;
+		game->ray->y = game->player->y_pos;
+		if (game->ray->angle < 0)
+			game->ray->angle += 2 * M_PI;
+		if (game->ray->angle > 2 * M_PI)
+			game->ray->angle -= 2 * M_PI;
+		while (game->map->map[(int)(game->ray->y / 64)][(int)(game->ray->x / 64)] != '1')
 		{
-				// mlx_put_pixel(image, px / 4 + 8,
-				//  	py / 4 + 8, 0x00FFFFFF);
-				px += cos(ray_angle);
-				py += sin(ray_angle);
+				// mlx_put_pixel(image, game->ray->x / 4 + 8,
+				//  	game->ray->y / 4 + 8, 0x00FFFFFF);
+				game->ray->x += cos(game->ray->angle);
+				game->ray->y += sin(game->ray->angle);
 		}
-		ray_length = sqrt((px - game->player->x_pos) * (px - game->player->x_pos) + (py - game->player->y_pos) * (py - game->player->y_pos));
-		ray_length *= cos(game->player->angle - ray_angle);
-		// printf("%f,%f,%f\n", game->player->angle, ray_angle ,ray_length);
+		game->ray->length = sqrt((game->ray->x - game->player->x_pos) * (game->ray->x - game->player->x_pos) + (game->ray->y - game->player->y_pos) * (game->ray->y - game->player->y_pos));
+		game->ray->length *= cos(game->player->angle - game->ray->angle);
+		// printf("%f,%f,%f\n", game->player->angle, game->ray->angle ,game->ray->length);
 		if (invisible_ray == 1)
-			game->wall_color = ft_wall_color(ray_length, last_ray);
-		while (k < 6 && invisible_ray)
-			ft_cast_ray(game, ray_length, ray_pos+(k++));
-		ray_pos+=k;
-		ray_angle += M_PI / 400;
+		{
+			ft_gendarmes(game);
+			game->wall_color = choose_texture(game, game->ray->angle);
+			while (k < 6 && invisible_ray)
+				ft_cast_ray(game, game->ray->length, ray_pos+(k++));
+			ray_pos+=k;
+			// printf("1. %d, %f, %f\n", game->ray->jsp, game->ray->x, game->ray->y);
+			save(game);
+			// printf("2. %d, %f, %f\n\n", game->ray->jsp, game->ray->x, game->ray->y);
+		}
+		game->ray->angle += M_PI / 480;
 		invisible_ray = 1;
 	}
 	// for (int x = 0; game->map->map[x]; x++)
@@ -268,6 +302,7 @@ int main(int argc, char* argv[])
 
 	game.map = malloc (sizeof(t_map));
 	game.player = malloc (sizeof(t_player));
+	game.ray = malloc (sizeof(t_ray));
 	game.argv = argv;
 	game.argc = argc;
 	game.map->x = 0;

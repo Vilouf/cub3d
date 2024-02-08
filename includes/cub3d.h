@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:32:51 by velbling          #+#    #+#             */
-/*   Updated: 2024/01/16 16:50:28 by velbling         ###   ########.fr       */
+/*   Updated: 2024/02/08 18:35:00 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,35 @@ typedef struct	s_player
 	double	angle;	
 }	t_player;
 
+typedef struct	s_ray
+{
+	double	angle;
+	double	length;
+	double	last_ray;
+	double	x;
+	double	y;
+	double	last_x;
+	double	last_y;
+	int		jsp;
+}	t_ray;
+
 typedef struct	s_game
 {
 	mlx_t		*mlx;
 	t_map		*map;
 	t_player	*player;
+	t_ray		*ray;
 	int		argc;
 	char	**argv;
 	int	wall_color;
 }	t_game;
+
+typedef struct s_pos
+{
+	double	x;
+	double	y;
+}	t_pos;
+
 
 char	*get_next_line(int fd);
 void	map(t_game *game);
