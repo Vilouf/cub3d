@@ -70,16 +70,16 @@ void ft_init_map(void* param)
 	}
 }
 
-double	dist(double x1, double y1, double x2, double y2)
+float	dist(float x1, float y1, float x2, float y2)
 {
 	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }
 
-void	ft_cast_ray(t_game *game, double ray_length, int ray_pos)
+void	ft_cast_ray(t_game *game, float ray_length, int ray_pos)
 {
 	int	i;
-	// double	wall_top, wall_bottom;
-	double wall_size;
+	// float	wall_top, wall_bottom;
+	float wall_size;
 
 	i = 0;
 	(void) game;
@@ -98,10 +98,10 @@ void	ft_cast_ray(t_game *game, double ray_length, int ray_pos)
 	}
 }
 
-double	next_point(t_game *game, double angle, char point)
+float	next_point(t_game *game, float angle, char point)
 {
-	double	x;
-	double	y;
+	float	x;
+	float	y;
 
 	angle += M_PI / 480;
 	x = game->player->x_pos;
@@ -118,20 +118,27 @@ double	next_point(t_game *game, double angle, char point)
 
 static void	ft_gendarmes(t_game *game)
 {
+	// printf("%f\n", fabs(game->ray->last_ray
+	// 		- dist(game->player->x_pos, game->player->y_pos, game->ray->x, game->ray->y)
+	// 		*cos(game->player->angle - game->ray->angle)));
 	if (fabs(game->ray->last_ray
-			- dist(game->player->x_pos, game->player->y_pos, game->ray->x, game->ray->y)
-			*cos(game->player->angle - game->ray->angle)) < 0.5)
+			- (dist(game->player->x_pos, game->player->y_pos, game->ray->x, game->ray->y)
+			* cos(game->player->angle - game->ray->angle))) < 500)
+	{
 		game->ray->jsp = fabs(game->ray->last_x - game->ray->x)
 			< fabs(game->ray->last_y - game->ray->y);
+	}
 	else
+	{
 		game->ray->jsp = fabs(game->ray->x
 				- next_point(game, game->ray->angle, 'x'))
 			< fabs(game->ray->y - next_point(game, game->ray->angle, 'y'));
+	}
 }
 
 void	save(t_game *game)
 {
-	game->ray->last_ray = dist(game->player->x_pos, \
+	game->ray->last_ray = dist(game->player->x_pos,
 			game->player->y_pos, game->ray->x, game->ray->y)
 		*cos(game->player->angle - game->ray->angle);
 	game->ray->last_x = game->ray->x;
@@ -141,16 +148,16 @@ void	save(t_game *game)
 int	choose_texture(t_game *game, float angle)
 {
 	// printf("%d, %f\n", game->ray->jsp, angle);
-	if (game->ray->jsp == 0)
+	if (!game->ray->jsp)
 	{
-		if (angle > 0 && angle < M_PI)
+		if (angle >= 0 && angle <= M_PI)
 			return (0xFF0000FF);
 		else
 			return (0x00FF00FF);
 	}
 	else
 	{
-		if (angle > M_PI / 2 && angle < 3 * M_PI / 2)
+		if (angle >= M_PI / 2 && angle <= 3 * M_PI / 2)
 			return (0x0000FFFF);
 		else
 			return (0x00FFFFFF);
@@ -171,7 +178,7 @@ void 	put_image(void* param)
 	image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	game->ray->angle = game->player->angle - 30 * 0.0174533 - 0.0174533;
 	game->ray->length = 0;
-	// static double	last_ray;
+	// static float	last_ray;
 	int	invisible_ray = 0;
 	int		ray_pos = 0;
 	int k = 0;
@@ -279,7 +286,7 @@ void	ft_hook(void* param)
 			// game->player->angle -= M_PI_2 / 16;
 			// if (game->player->angle < 0)
 			// 	game->player->angle = 2 * M_PI;
-			game->player->angle += M_PI / 32;
+			game->player->angle += M_PI / 64;
 			if (game->player->angle > 2 * M_PI)
 				game->player->angle -= 2 * M_PI;
 		}
@@ -288,7 +295,7 @@ void	ft_hook(void* param)
 			// game->player->angle += M_PI_2 / 6;
 			// if (game->player->angle > 2 * M_PI)
 			// 	game->player->angle = 0;
-			game->player->angle -= M_PI / 32;
+			game->player->angle -= M_PI / 64;
 			if (game->player->angle < 0)
 				game->player->angle += 2 * M_PI;
 		}

@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:32:51 by velbling          #+#    #+#             */
-/*   Updated: 2024/02/08 18:35:00 by velbling         ###   ########.fr       */
+/*   Updated: 2024/02/08 19:39:44 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,18 @@ typedef struct	s_player
 {
 	float	x_pos;
 	float	y_pos;
-	double	angle;	
+	float	angle;	
 }	t_player;
 
 typedef struct	s_ray
 {
-	double	angle;
-	double	length;
-	double	last_ray;
-	double	x;
-	double	y;
-	double	last_x;
-	double	last_y;
+	float	angle;
+	float	length;
+	float	last_ray;
+	float	x;
+	float	y;
+	float	last_x;
+	float	last_y;
 	int		jsp;
 }	t_ray;
 
@@ -66,8 +66,8 @@ typedef struct	s_game
 
 typedef struct s_pos
 {
-	double	x;
-	double	y;
+	float	x;
+	float	y;
 }	t_pos;
 
 
