@@ -56,6 +56,7 @@ typedef struct	s_ray
 typedef struct	s_game
 {
 	mlx_t		*mlx;
+	mlx_image_t	*image;
 	t_map		*map;
 	t_player	*player;
 	t_ray		*ray;

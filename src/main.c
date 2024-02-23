@@ -1,6 +1,6 @@
  #include "cub3d.h"
 
-static mlx_image_t* image;
+// static mlx_image_t* image;
 
 // -----------------------------------------------------------------------------
 
@@ -9,7 +9,7 @@ int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
     return (r << 24 | g << 16 | b << 8 | a);
 }
 
-void spread_pixels(int x, int y, uint32_t color)
+void spread_pixels(t_game * game, int x, int y, uint32_t color)
 {
 	int i = 0;
 	int j = 0;
@@ -18,7 +18,7 @@ void spread_pixels(int x, int y, uint32_t color)
 	{
 		while (j < 16)
 		{
-			mlx_put_pixel(image, x + i, y + j, color);
+			mlx_put_pixel(game->image, x + i, y + j, color);
 			j++;
 		}
 		i++;
@@ -37,7 +37,7 @@ void	init_player_pos(t_game *game)
 	{
 		while (j < 4)
 		{
-			mlx_put_pixel(image, (game->player->x_pos / 4) + i, (game->player->y_pos / 4) + j, 0xFF0000FF);
+			mlx_put_pixel(game->image, (game->player->x_pos / 4) + i, (game->player->y_pos / 4) + j, 0xFF0000FF);
 			j++;
 		}
 		i++;
@@ -57,7 +57,7 @@ void ft_init_map(void* param)
 		{
 			// if (game->map->map[x][y] == '1')
 			// {
-			// 	spread_pixels(y * 64, x * 64, 0xFFAA00FF);
+			// 	spread_pixels(game, y * 64, x * 64, 0xFFAA00FF);
 			// }
 			if (game->map->map[x][y] == 'E')
 			{
@@ -85,7 +85,7 @@ void	ft_cast_ray(t_game *game, float ray_length, int ray_pos)
 	(void) game;
 	if (ray_pos >= 960)
 		return ;
-	wall_size = 40000 / ray_length;
+	wall_size = 50000 / ray_length;
 	if (wall_size > HEIGHT)
 		wall_size = HEIGHT;
 	i = HEIGHT / 2 - wall_size / 2;
@@ -93,7 +93,7 @@ void	ft_cast_ray(t_game *game, float ray_length, int ray_pos)
 	// wall_bottom = ray_length / 2 + 1000 / 2;
 	while (i < HEIGHT / 2 + wall_size / 2)
 	{
-		mlx_put_pixel(image, ray_pos, i, game->wall_color);
+		mlx_put_pixel(game->image, ray_pos, i, game->wall_color);
 		i++;
 	}
 }
@@ -106,10 +106,10 @@ float	next_point(t_game *game, float angle, char point)
 	angle += M_PI / 480;
 	x = game->player->x_pos;
 	y = game->player->y_pos;
-	if (game->map->map[(int)(y / 64)][(int)(x / 64)] == '1')
+	while (game->map->map[(int)(y / 64)][(int)x / 64] != '1')
 	{
-		x += cos(angle);
-		y += sin(angle);
+		x += cos(angle) * 0.1;
+		y += sin(angle) * 0.1;
 	}
 	if (point == 'x')
 		return (x);
@@ -123,7 +123,7 @@ static void	ft_gendarmes(t_game *game)
 	// 		*cos(game->player->angle - game->ray->angle)));
 	if (fabs(game->ray->last_ray
 			- (dist(game->player->x_pos, game->player->y_pos, game->ray->x, game->ray->y)
-			* cos(game->player->angle - game->ray->angle))) < 500)
+			* cos(game->player->angle - game->ray->angle))) < 50)
 	{
 		game->ray->jsp = fabs(game->ray->last_x - game->ray->x)
 			< fabs(game->ray->last_y - game->ray->y);
@@ -150,14 +150,14 @@ int	choose_texture(t_game *game, float angle)
 	// printf("%d, %f\n", game->ray->jsp, angle);
 	if (!game->ray->jsp)
 	{
-		if (angle >= 0 && angle <= M_PI)
+		if (angle > 0 && angle < M_PI)
 			return (0xFF0000FF);
 		else
 			return (0x00FF00FF);
 	}
 	else
 	{
-		if (angle >= M_PI / 2 && angle <= 3 * M_PI / 2)
+		if (angle > M_PI / 2 && angle < 3 * M_PI / 2)
 			return (0x0000FFFF);
 		else
 			return (0x00FFFFFF);
@@ -174,8 +174,8 @@ void 	put_image(void* param)
 	// i = 0;
 	// j = 0;
 	game = param;
-	mlx_delete_image(game->mlx, image);
-	image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	mlx_delete_image(game->mlx, game->image);
+	game->image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	game->ray->angle = game->player->angle - 30 * 0.0174533 - 0.0174533;
 	game->ray->length = 0;
 	// static float	last_ray;
@@ -183,7 +183,6 @@ void 	put_image(void* param)
 	int		ray_pos = 0;
 	int k = 0;
 	game->wall_color = 0xFFAA00FF;
-
 	while (ray_pos < WIDTH)
 	{
 		k = 0;
@@ -193,12 +192,13 @@ void 	put_image(void* param)
 			game->ray->angle += 2 * M_PI;
 		if (game->ray->angle > 2 * M_PI)
 			game->ray->angle -= 2 * M_PI;
-		while (game->map->map[(int)(game->ray->y / 64)][(int)(game->ray->x / 64)] != '1')
+		while (game->map->map[(int)((game->ray->y / 64) + 0.001)][(int)((game->ray->x / 64) + 0.001)] != '1' && game->map->map[(int)((game->ray->y / 64) - 0.001)][(int)((game->ray->x / 64) - 0.001)] != '1' \
+				&& game->map->map[(int)((game->ray->y / 64) - 0.001)][(int)((game->ray->x / 64) + 0.001)] != '1' && game->map->map[(int)((game->ray->y / 64) - 0.001)][(int)((game->ray->x / 64) + 0.001)] != '1')
 		{
 				// mlx_put_pixel(image, game->ray->x / 4 + 8,
 				//  	game->ray->y / 4 + 8, 0x00FFFFFF);
-				game->ray->x += cos(game->ray->angle);
-				game->ray->y += sin(game->ray->angle);
+				game->ray->x += cos(game->ray->angle) * 0.1;
+				game->ray->y += sin(game->ray->angle) * 0.1;
 		}
 		game->ray->length = sqrt((game->ray->x - game->player->x_pos) * (game->ray->x - game->player->x_pos) + (game->ray->y - game->player->y_pos) * (game->ray->y - game->player->y_pos));
 		game->ray->length *= cos(game->player->angle - game->ray->angle);
@@ -209,11 +209,11 @@ void 	put_image(void* param)
 			game->wall_color = choose_texture(game, game->ray->angle);
 			while (k < 6 && invisible_ray)
 				ft_cast_ray(game, game->ray->length, ray_pos+(k++));
-			ray_pos+=k;
+			ray_pos += k;
 			// printf("1. %d, %f, %f\n", game->ray->jsp, game->ray->x, game->ray->y);
-			save(game);
 			// printf("2. %d, %f, %f\n\n", game->ray->jsp, game->ray->x, game->ray->y);
 		}
+		save(game);
 		game->ray->angle += M_PI / 480;
 		invisible_ray = 1;
 	}
@@ -223,7 +223,7 @@ void 	put_image(void* param)
 	// 	{
 	// 		if (game->map->map[x][y] == '1')
 	// 		{
-	// 			spread_pixels(y * 16, x * 16, 0xFFAA00FF);
+	// 			spread_pixels(game, y * 16, x * 16, 0xFFAA00FF);
 	// 		}
 	// 	}
 	// }
@@ -239,7 +239,7 @@ void 	put_image(void* param)
 	// 	i++;
 	// 	j = 0;
 	// }
-	mlx_image_to_window(game->mlx, image, 0, 0);
+	mlx_image_to_window(game->mlx, game->image, 0, 0);
 }
 
 int	ft_movement(mlx_t *mlx)
@@ -334,13 +334,13 @@ int main(int argc, char* argv[])
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	if (!(image = mlx_new_image(game.mlx, WIDTH, HEIGHT)))
+	if (!(game.image = mlx_new_image(game.mlx, WIDTH, HEIGHT)))
 	{
 		mlx_close_window(game.mlx);
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	if (mlx_image_to_window(game.mlx, image, 0, 0) == -1)
+	if (mlx_image_to_window(game.mlx, game.image, 0, 0) == -1)
 	{
 		mlx_close_window(game.mlx);
 		puts(mlx_strerror(mlx_errno));
