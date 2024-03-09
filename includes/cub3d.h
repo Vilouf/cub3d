@@ -57,6 +57,11 @@ typedef struct	s_game
 {
 	mlx_t		*mlx;
 	mlx_image_t	*image;
+	mlx_texture_t	*current_txt;
+	mlx_texture_t	*n_txt;
+	mlx_texture_t	*s_txt;
+	mlx_texture_t	*e_txt;
+	mlx_texture_t	*w_txt;
 	t_map		*map;
 	t_player	*player;
 	t_ray		*ray;

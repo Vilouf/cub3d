@@ -75,6 +75,33 @@ float	dist(float x1, float y1, float x2, float y2)
 	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }
 
+
+uint32_t	get_text_img(t_game *game, int wHeight, double wallSize, float x)
+{
+	uint32_t	color;
+	double		r;
+	uint8_t		*pix_tab;
+
+	r = wallSize / game->current_txt->height;
+	color = 0;
+	pix_tab = game->current_txt->pixels;
+	wHeight -= (HEIGHT / 2 - (wallSize / 2));
+	wHeight /= r;
+	if (wHeight >= (int)game->current_txt->height)
+		wHeight = game->current_txt->height;
+	if (x >= game->current_txt->width)
+		x = (int)floor(x) % game->current_txt->width + (floor(x) - x);
+	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
+			*4 + (wHeight * game->current_txt->height * 4)] << 24);
+	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
+			*4 + (wHeight * game->current_txt->height * 4) + 1] << 16);
+	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
+			*4 + (wHeight * game->current_txt->height * 4) + 2] << 8);
+	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
+			*4 + (wHeight * game->current_txt->height * 4) + 3]);
+	return (color);
+}
+
 void	ft_cast_ray(t_game *game, float ray_length, int ray_pos)
 {
 	int	i;
@@ -93,7 +120,12 @@ void	ft_cast_ray(t_game *game, float ray_length, int ray_pos)
 	// wall_bottom = ray_length / 2 + 1000 / 2;
 	while (i < HEIGHT / 2 + wall_size / 2)
 	{
-		mlx_put_pixel(game->image, ray_pos, i, game->wall_color);
+		if (game->ray->jsp)
+			mlx_put_pixel(game->image, ray_pos, i,
+				get_text_img(game, i, wall_size, game->ray->y));
+		else
+			mlx_put_pixel(game->image, ray_pos, i,
+				get_text_img(game, i, wall_size, game->ray->x));
 		i++;
 	}
 }
@@ -151,16 +183,16 @@ int	choose_texture(t_game *game, float angle)
 	if (!game->ray->jsp)
 	{
 		if (angle > 0 && angle < M_PI)
-			return (0xFF0000FF);
+			game->current_txt = game->s_txt;
 		else
-			return (0x00FF00FF);
+			game->current_txt = game->n_txt;
 	}
 	else
 	{
 		if (angle > M_PI / 2 && angle < 3 * M_PI / 2)
-			return (0x0000FFFF);
+			game->current_txt = game->w_txt;
 		else
-			return (0x00FFFFFF);
+			game->current_txt = game->e_txt;
 	}
 	printf("AAAAAAAA\n");
 	return (1);
@@ -303,6 +335,14 @@ void	ft_hook(void* param)
 	put_image(game);
 }
 
+void	ft_load_png(t_game * game)
+{
+	game->n_txt = mlx_load_png("textures/wall1.png");
+	game->s_txt = mlx_load_png("textures/wall2.png");
+	game->e_txt = mlx_load_png("textures/wall3.png");
+	game->w_txt = mlx_load_png("textures/wall4.png");
+}
+
 int main(int argc, char* argv[])
 {
 	t_game	game;
@@ -316,6 +356,7 @@ int main(int argc, char* argv[])
 	game.map->y = 0;
 	game.map->x_size = 0;
 	game.map->y_size = 0;
+	ft_load_png(&game);
 
 	map(&game);
 
