@@ -76,7 +76,7 @@ float	dist(float x1, float y1, float x2, float y2)
 }
 
 
-uint32_t	get_text_img(t_game *game, int wHeight, double wallSize, float x)
+uint32_t	get_text_img(t_game *game, int wHeight, double wallSize, double x)
 {
 	uint32_t	color;
 	double		r;
@@ -87,18 +87,18 @@ uint32_t	get_text_img(t_game *game, int wHeight, double wallSize, float x)
 	pix_tab = game->current_txt->pixels;
 	wHeight -= (HEIGHT / 2 - (wallSize / 2));
 	wHeight /= r;
-	if (wHeight >= (int)game->current_txt->height)
-		wHeight = game->current_txt->height;
+	// if (wHeight >= (int) game->current_txt->height)
+	// 	wHeight = game->current_txt->height;
 	if (x >= game->current_txt->width)
 		x = (int)floor(x) % game->current_txt->width + (floor(x) - x);
 	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
-			*4 + (wHeight * game->current_txt->height * 4)] << 24);
+			* 4 + (wHeight * game->current_txt->height * 4)] << 24);
 	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
-			*4 + (wHeight * game->current_txt->height * 4) + 1] << 16);
+			* 4 + (wHeight * game->current_txt->height * 4) + 1] << 16);
 	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
-			*4 + (wHeight * game->current_txt->height * 4) + 2] << 8);
+			* 4 + (wHeight * game->current_txt->height * 4) + 2] << 8);
 	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
-			*4 + (wHeight * game->current_txt->height * 4) + 3]);
+			* 4 + (wHeight * game->current_txt->height * 4) + 3]);
 	return (color);
 }
 
@@ -106,7 +106,8 @@ void	ft_cast_ray(t_game *game, float ray_length, int ray_pos)
 {
 	int	i;
 	// float	wall_top, wall_bottom;
-	float wall_size;
+	double wall_size;
+	double d_wall_size;
 
 	i = 0;
 	(void) game;
@@ -114,18 +115,21 @@ void	ft_cast_ray(t_game *game, float ray_length, int ray_pos)
 		return ;
 	wall_size = 50000 / ray_length;
 	if (wall_size > HEIGHT)
-		wall_size = HEIGHT;
-	i = HEIGHT / 2 - wall_size / 2;
+		d_wall_size = HEIGHT;
+	else
+		d_wall_size = wall_size;
+	i = HEIGHT / 2 - d_wall_size / 2;
 	// wall_top = -ray_length / 2 + 1000 / 2; //-lineHeight / 2 + 1000 / 2;
 	// wall_bottom = ray_length / 2 + 1000 / 2;
-	while (i < HEIGHT / 2 + wall_size / 2)
+	
+	while (i < HEIGHT / 2 + d_wall_size / 2)
 	{
 		if (game->ray->jsp)
 			mlx_put_pixel(game->image, ray_pos, i,
-				get_text_img(game, i, wall_size, game->ray->y));
+				get_text_img(game, i, wall_size, game->ray->y / 64));
 		else
 			mlx_put_pixel(game->image, ray_pos, i,
-				get_text_img(game, i, wall_size, game->ray->x));
+				get_text_img(game, i, wall_size, game->ray->x / 64));
 		i++;
 	}
 }
@@ -194,7 +198,7 @@ int	choose_texture(t_game *game, float angle)
 		else
 			game->current_txt = game->e_txt;
 	}
-	printf("AAAAAAAA\n");
+	// printf("AAAAAAAA\n");
 	return (1);
 }
 
@@ -214,7 +218,6 @@ void 	put_image(void* param)
 	int	invisible_ray = 0;
 	int		ray_pos = 0;
 	int k = 0;
-	game->wall_color = 0xFFAA00FF;
 	while (ray_pos < WIDTH)
 	{
 		k = 0;
@@ -232,9 +235,11 @@ void 	put_image(void* param)
 				game->ray->x += cos(game->ray->angle) * 0.1;
 				game->ray->y += sin(game->ray->angle) * 0.1;
 		}
-		game->ray->length = sqrt((game->ray->x - game->player->x_pos) * (game->ray->x - game->player->x_pos) + (game->ray->y - game->player->y_pos) * (game->ray->y - game->player->y_pos));
+		// printf("%f,%f=>%f,%f\n", game->player->x_pos, game->player->y_pos, game->ray->x, game->ray->y);
+		game->ray->length = dist(game->player->x_pos, game->player->y_pos, game->ray->x, game->ray->y);
+		//printf("b%f\n",game->ray->length);
 		game->ray->length *= cos(game->player->angle - game->ray->angle);
-		// printf("%f,%f,%f\n", game->player->angle, game->ray->angle ,game->ray->length);
+		//printf("a%f\n" ,game->ray->length);
 		if (invisible_ray == 1)
 		{
 			ft_gendarmes(game);
