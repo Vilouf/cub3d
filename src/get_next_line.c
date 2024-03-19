@@ -10,115 +10,75 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../includes/cub3d.h"
 
-static int	get_size(char *tmp)
+char	*ft_prepare_next_line(char *str)
 {
-	int	i;
+	int		i;
+	char	*next_line;
 
 	i = 0;
-	while (tmp && tmp[i] && tmp[i] != '\n')
+	while (str[i] != '\n' && str[i] != 0)
 		i++;
-	if (i == 1)
-		i = 0;
-	return (i);
-}
-
-static char	*read_file(int fd, char *tmp)
-{
-	char	*buf;
-	int		read_ret;
-
-	buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (buf == NULL)
-		return (0);
-	read_ret = 1;
-	while (read_ret > 0)
+	if (str[i] == 0)
 	{
-		read_ret = read(fd, buf, BUFFER_SIZE);
-		if (read_ret < 0)
-		{
-			free(buf);
-			return (0);
-		}
-		buf[read_ret] = '\0';
-		tmp = ft_strjoin(tmp, buf);
-		if (tmp == NULL)
-			break ;
-		if (ft_strchr(buf, '\n'))
-			break ;
+		free(str);
+		return (NULL);
 	}
-	free(buf);
-	return (tmp);
+	next_line = ft_substr(str, i + 1, ft_strlen(str));
+	free(str);
+	return (next_line);
 }
 
-static char	*get_end(char *tmp, int i)
+char	*ft_get_line(char *str)
 {
-	int		j;
+	int		i;
 	char	*line;
 
-	while (tmp[i] && tmp[i] != '\n')
+	i = 0;
+	if (!str)
+		return (NULL);
+	while (str[i] != '\n' && str[i] != 0)
 		i++;
-	if (!tmp[i])
-	{
-		free(tmp);
-		return (0);
-	}
-	line = malloc((sizeof(char) * ft_strlen(tmp) - i) + 1);
-	if (line == NULL)
-	{
-		free(tmp);
-		return (0);
-	}
-	i++;
-	j = 0;
-	while (tmp[i])
-		line[j++] = tmp[i++];
-	line[j] = '\0';
-	free(tmp);
+	line = ft_substr(str, 0, i + 1);
 	return (line);
 }
 
-static char	*get_start(char *line, char *tmp, int i)
+char	*ft_read_line(int fd, char *str)
 {
-	i = get_size(tmp);
-	line = malloc(sizeof(char) * i + 2);
-	if (line == NULL)
+	char	*buf;
+	int		check_read;
+
+	buf = ft_calloc(BUFFER_SIZE + 1, sizeof (char));
+	check_read = 1;
+	while (check_read > 0 && !ft_strchr(buf, '\n'))
 	{
-		free(tmp);
-		return (0);
+		check_read = read(fd, buf, BUFFER_SIZE);
+		if (check_read == -1)
+		{
+			free(buf);
+			free(str);
+			return (NULL);
+		}
+		buf[check_read] = 0;
+		if (check_read != 0)
+			str = ft_strjoin(str, buf);
 	}
-	i = 0;
-	while (tmp[i] && tmp[i] != '\n')
-	{
-		line[i] = tmp[i];
-		i++;
-	}
-	line[i] = '\0';
-	return (line);
+	free(buf);
+	return (str);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*tmp;
-	char		*line;
-	int			i;
+	static char	*str;
+	char		*ret_line;
 
-	tmp = 0;
-	line = 0;
-	i = 0;
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (0);
-	tmp = read_file(fd, tmp);
-	if (!tmp)
-		return (0);
-	line = get_start(line, tmp, i);
-	tmp = get_end(tmp, i);
-	if (line[i] == 0)
-	{
-		free(line);
 		return (NULL);
-	}
-	free(tmp);
-	return (line);
+	str = ft_read_line(fd, str);
+	if (!str)
+		return (NULL);
+	ret_line = ft_get_line(str);
+	str = ft_prepare_next_line(str);
+	return (ret_line);
 }

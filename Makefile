@@ -15,14 +15,24 @@ NAME = cub3d
 FILES = main \
 		get_next_line \
 		get_next_line_utils \
-		map
+		parsing \
+		cardinal \
+		error \
+		ft_atoi \
+		ft_rgb_c \
+		ft_rgb_f \
+		map \
+		check_map \
+		check_map_borders \
+		utils \
+		map_utils
 
 #MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -framework Cocoa -framework OpenGL -framework IOKit
 MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -lm#-framework Cocoa -framework OpenGL -framework IOKit
 
 SRC = $(addprefix src/, $(addsuffix .c, $(FILES)))
 
-GFLAG = -Wall -Wextra -Werror #-fsanitize=address -g3
+GFLAG = -Wall -Wextra -Werror -g3 #-fsanitize=address -g3
 
 OBJ = $(SRC:.c=.o)
 
