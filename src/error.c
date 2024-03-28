@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktaplin <ktaplin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 11:41:12 by ktaplin           #+#    #+#             */
-/*   Updated: 2023/03/15 19:01:27 by ktaplin          ###   ########.fr       */
+/*   Updated: 2024/03/26 15:48:46 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,27 @@ void	error(char *str, t_game *game)
 	free(game->map);
 	free(game);
 	exit (EXIT_FAILURE);
+}
+
+void	error_check(t_game *game)
+{
+	if (!(game->mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
+	{
+		puts(mlx_strerror(mlx_errno));
+		error("jsp", game);
+	}
+	if (!(game->image = mlx_new_image(game->mlx, WIDTH, HEIGHT)))
+	{
+		mlx_close_window(game->mlx);
+		puts(mlx_strerror(mlx_errno));
+		error("jsp", game);
+	}
+	if (mlx_image_to_window(game->mlx, game->image, 0, 0) == -1)
+	{
+		mlx_close_window(game->mlx);
+		puts(mlx_strerror(mlx_errno));
+		error("jsp", game);
+	}
 }
 
 void	*freetab(char **tab)

@@ -6,7 +6,7 @@
 #    By: velbling <velbling@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 15:15:30 by velbling          #+#    #+#              #
-#    Updated: 2024/02/08 12:35:06 by velbling         ###   ########.fr        #
+#    Updated: 2024/03/26 15:50:40 by velbling         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,14 +25,17 @@ FILES = main \
 		check_map \
 		check_map_borders \
 		utils \
-		map_utils
+		map_utils \
+		init \
+		raycasting \
+		movement
 
 #MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -framework Cocoa -framework OpenGL -framework IOKit
 MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -lm#-framework Cocoa -framework OpenGL -framework IOKit
 
 SRC = $(addprefix src/, $(addsuffix .c, $(FILES)))
 
-GFLAG = -Wall -Wextra -Werror -g3 #-fsanitize=address -g3
+GFLAG = -Wall -Wextra -Werror -fsanitize=address -g3
 
 OBJ = $(SRC:.c=.o)
 

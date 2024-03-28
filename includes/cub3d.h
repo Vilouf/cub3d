@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:32:51 by velbling          #+#    #+#             */
-/*   Updated: 2024/02/08 19:39:44 by velbling         ###   ########.fr       */
+/*   Updated: 2024/03/26 15:49:47 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,22 @@ typedef struct s_pos
 	float	x;
 	float	y;
 }	t_pos;
+
+
+//vlof
+
+void	error_check(t_game *game);
+void	init_player_pos(t_game *game);
+void 	ft_init_map(void* param);
+void	save(t_game *game);
+void	ft_gendarmes(t_game *game);
+double	next_point(t_game *game, double angle, char point);
+void	ft_cast_ray(t_game *game, double ray_length, int ray_pos);
+uint32_t	get_text_img(t_game *game, int wHeight, double wallSize, double x);
+void	ft_load_png(t_game * game);
+void	ft_hook(void* param);
+double	dist(float x1, float y1, float x2, float y2);
+void 	put_image(void* param);
 
 //kiwi
 
