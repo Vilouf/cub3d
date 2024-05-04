@@ -1,6 +1,6 @@
  #include "cub3d.h"
 
-double	dist(float x1, float y1, float x2, float y2)
+float	dist(float x1, float y1, float x2, float y2)
 {
 	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }
@@ -57,12 +57,12 @@ void 	put_image(void* param)
 		{
 			ft_gendarmes(game);
 			game->wall_color = choose_texture(game, game->ray->angle);
-			while (k < 6 && invisible_ray)
+			while (k < 8 && invisible_ray)
 				ft_cast_ray(game, game->ray->length, ray_pos+(k++));
 			ray_pos += k;
 		}
 		save(game);
-		game->ray->angle += M_PI / 480;
+		game->ray->angle += M_PI / 360;
 		invisible_ray = 1;
 	}
 	mlx_image_to_window(game->mlx, game->image, 0, 0);

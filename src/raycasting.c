@@ -6,16 +6,16 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:22:10 by velbling          #+#    #+#             */
-/*   Updated: 2024/03/25 16:24:40 by velbling         ###   ########.fr       */
+/*   Updated: 2024/05/04 15:13:57 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-uint32_t	get_text_img(t_game *game, int wHeight, double wallSize, double x)
+uint32_t	get_text_img(t_game *game, int wHeight, float wallSize, float x)
 {
 	uint32_t	color;
-	double		r;
+	float		r;
 	uint8_t		*pix_tab;
 
 	r = wallSize / game->current_txt->height;
@@ -36,14 +36,12 @@ uint32_t	get_text_img(t_game *game, int wHeight, double wallSize, double x)
 	return (color);
 }
 
-void	ft_cast_ray(t_game *game, double ray_length, int ray_pos)
+void	ft_cast_ray(t_game *game, float ray_length, int ray_pos)
 {
-	int	i;
 	// float	wall_top, wall_bottom;
-	double wall_size;
-	double d_wall_size;
+	float wall_size;
+	float d_wall_size;
 
-	i = 0;
 	(void) game;
 	if (ray_pos >= 960)
 		return ;
@@ -52,23 +50,13 @@ void	ft_cast_ray(t_game *game, double ray_length, int ray_pos)
 		d_wall_size = HEIGHT;
 	else
 		d_wall_size = wall_size;
-	i = HEIGHT / 2 - d_wall_size / 2;
-	while (i < HEIGHT / 2 + d_wall_size / 2)
-	{
-		if (game->ray->jsp)
-			mlx_put_pixel(game->image, ray_pos, i,
-				get_text_img(game, i, wall_size, game->ray->y / 64));
-		else
-			mlx_put_pixel(game->image, ray_pos, i,
-				get_text_img(game, i, wall_size, game->ray->x / 64));
-		i++;
-	}
+	ft_cast_ray_bis(game, wall_size, d_wall_size, ray_pos);
 }
 
-double	next_point(t_game *game, double angle, char point)
+float	next_point(t_game *game, float angle, char point)
 {
-	double	x;
-	double	y;
+	float	x;
+	float	y;
 
 	angle += M_PI / 480;
 	x = game->player->x_pos;

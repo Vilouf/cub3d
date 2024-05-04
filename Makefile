@@ -6,7 +6,7 @@
 #    By: velbling <velbling@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 15:15:30 by velbling          #+#    #+#              #
-#    Updated: 2024/03/26 15:50:40 by velbling         ###   ########.fr        #
+#    Updated: 2024/05/04 15:05:01 by velbling         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ FILES = main \
 		map_utils \
 		init \
 		raycasting \
-		movement
+		movement \
+		raycasting_bis
 
 #MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -framework Cocoa -framework OpenGL -framework IOKit
 MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -lm#-framework Cocoa -framework OpenGL -framework IOKit

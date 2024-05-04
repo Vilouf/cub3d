@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_rgb_c.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktaplin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 11:48:00 by ktaplin           #+#    #+#             */
-/*   Updated: 2022/11/23 14:38:25 by ktaplin          ###   ########.fr       */
+/*   Updated: 2024/05/04 16:13:32 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,9 @@ int	ceiling(char *str, int i, t_game *game, int n)
 	{	
 		while (ft_isdigit(str[i]) == 0){
 			i = ceiling_utils_three(game, i, number, str);
-			printf("--------------------\n");
 		}
 		game->j_rgb = 0;
-		printf("number : %s\n", number);
 		// exit (1);
-		printf("|%c|\n", str[i]);
 		set_color_c(number, ++cpt, game);
 		number = ceiling_utils(number, cpt);
 		while (str[i] == ' ')

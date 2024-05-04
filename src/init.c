@@ -6,30 +6,11 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:18:40 by velbling          #+#    #+#             */
-/*   Updated: 2024/03/25 16:27:38 by velbling         ###   ########.fr       */
+/*   Updated: 2024/05/04 15:56:14 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	init_player_pos(t_game *game)
-{
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while (i < 4)
-	{
-		while (j < 4)
-		{
-			mlx_put_pixel(game->image, (game->player->x_pos / 4) + i, (game->player->y_pos / 4) + j, 0xFF0000FF);
-			j++;
-		}
-		i++;
-		j = 0;
-	}
-}
 
 void ft_init_map(void* param)
 {
