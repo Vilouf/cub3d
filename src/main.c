@@ -31,11 +31,13 @@ void 	put_image(void* param)
 	game = param;
 	mlx_delete_image(game->mlx, game->image);
 	game->image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	game->ray->angle = game->player->angle - 30 * 0.0174533 - 0.0174533;
+	game->ray->angle = game->player->angle - 30 * (M_PI / 180) - (M_PI / 180);
 	game->ray->length = 0;
 	int	invisible_ray = 0;
 	int		ray_pos = 0;
 	int k = 0;
+	static int debug;
+	// printf("NOUVEL IMAGE\n");
 	while (ray_pos < WIDTH)
 	{
 		k = 0;
@@ -45,12 +47,17 @@ void 	put_image(void* param)
 			game->ray->angle += 2 * M_PI;
 		if (game->ray->angle > 2 * M_PI)
 			game->ray->angle -= 2 * M_PI;
+		if (ray_pos == WIDTH / 2)
+			// printf("--------------------------------------------------------\n");
+		debug = 0;
 		while (game->map->map[(int)((game->ray->y / 64) + 0.001)][(int)((game->ray->x / 64) + 0.001)] != '1' && game->map->map[(int)((game->ray->y / 64) - 0.001)][(int)((game->ray->x / 64) - 0.001)] != '1' \
-				&& game->map->map[(int)((game->ray->y / 64) - 0.001)][(int)((game->ray->x / 64) + 0.001)] != '1' && game->map->map[(int)((game->ray->y / 64) - 0.001)][(int)((game->ray->x / 64) + 0.001)] != '1')
+				&& game->map->map[(int)((game->ray->y / 64) - 0.001)][(int)((game->ray->x / 64) + 0.001)] != '1' && game->map->map[(int)((game->ray->y / 64) + 0.001)][(int)((game->ray->x / 64) - 0.001)] != '1')
 		{
 				game->ray->x += cos(game->ray->angle) * 0.1;
 				game->ray->y += sin(game->ray->angle) * 0.1;
+				debug++;
 		}
+		// printf("debug = %i\n", debug);
 		game->ray->length = dist(game->player->x_pos, game->player->y_pos, game->ray->x, game->ray->y);
 		game->ray->length *= cos(game->player->angle - game->ray->angle);
 		if (invisible_ray == 1)

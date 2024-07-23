@@ -6,35 +6,35 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:02:28 by velbling          #+#    #+#             */
-/*   Updated: 2024/05/04 15:32:51 by velbling         ###   ########.fr       */
+/*   Updated: 2024/05/25 18:50:19 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static uint32_t    ceiling_color(t_game *game)
+static uint32_t	ceiling_color(t_game *game)
 {
-	uint32_t    color;
-	
-   color = (uint32_t)((game->ceiling_r << 24) \
+	uint32_t	color;
+
+	color = (uint32_t)((game->ceiling_r << 24) \
 			| (game->ceiling_g << 16) \
 			| (game->ceiling_b << 8) \
 			| (255 << 0));
 	return (color);
 }
 
-static uint32_t    floor_color(t_game *game)
+static uint32_t	floor_color(t_game *game)
 {
-	uint32_t    color;
-	
-   color = (uint32_t)((game->floor_r << 24) \
+	uint32_t	color;
+
+	color = (uint32_t)((game->floor_r << 24) \
 			| (game->floor_g << 16) \
 			| (game->floor_b << 8) \
 			| (255 << 0));
 	return (color);
 }
 
-void    ft_cast_ray_bis(t_game *game, float ws, float d_ws, int ray_pos)
+void	ft_cast_ray_bis(t_game *game, float ws, float d_ws, int ray_pos)
 {
 	int	i;
 	int	cl;

@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 11:41:12 by ktaplin           #+#    #+#             */
-/*   Updated: 2024/03/26 15:48:46 by velbling         ###   ########.fr       */
+/*   Updated: 2024/05/25 18:39:39 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,14 @@ void	error(char *str, t_game *game)
 
 void	error_check(t_game *game)
 {
-	if (!(game->mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
+	game->mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
+	if (!(game->mlx))
 	{
 		puts(mlx_strerror(mlx_errno));
 		error("jsp", game);
 	}
-	if (!(game->image = mlx_new_image(game->mlx, WIDTH, HEIGHT)))
+	game->image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	if (!(game->image))
 	{
 		mlx_close_window(game->mlx);
 		puts(mlx_strerror(mlx_errno));

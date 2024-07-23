@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 19:01:33 by velbling          #+#    #+#             */
-/*   Updated: 2024/05/04 16:16:31 by velbling         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:45:47 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,59 +22,87 @@
 // 		|| mlx_is_key_down(mlx, MLX_KEY_LEFT));
 // }
 
-// int	collision(t_game *game, float x_pos, float y_pos)
-// {
-// 	int	x;
-// 	int	y;
+void	collision_y(t_game *game, float col[2], float x, float y)
+{
+	int		t;
 
-// 	y = 0;
-// 	while (y < game->map->y_size)
-// 	{
-// 		x = 0;
-// 		while (game->map->map[y][x])
-// 		{
-// 			if (game->map->map[y][x] == '1')
-// 			{
-// 				if (y_pos <= (float) y * 64 + 64 
-// 					&& y_pos >= (float) y * 64 
-// 					&& x_pos <= (float) x * 64 + 64 
-// 					&& x_pos >= (float) x * 64)
-// 				{
-// 					return (0);
-// 				}
-// 			}
-// 			x++;
-// 		}
-// 		y++;
-// 	}
-// 	return (1);
-// }
+	t = 0;
+	if (game->map->map[(int)(y + col[1] * 2) / 64][(int)(x) / 64] != '1')
+	{
+		if (col[1] > 0 
+			&& game->map->map[(int)(y + 10) / 64][(int)(x) / 64] != '1')
+			t = 1;
+		else if (col[1] > 0
+			&& game->map->map[(int)(y + 10) / 64][(int)(x) / 64] != '1')
+			t = 1;
+		else if (col[1] < 0
+			&& game->map->map[(int)(y - 10) / 64][(int)(x) / 64] != '1')
+			t = 1;
+		else if (col[1] < 0
+			&& game->map->map[(int)(y - 10) / 64][(int)(x) / 64] != '1')
+			t = 1;
+	}
+	if (t)
+		game->player->y_pos += col[1] * 4;
+}
+
+void	collision_x(t_game *game, float col[2], float x, float y)
+{
+	int		t;
+
+	t = 0;
+	if (game->map->map[(int)(y) / 64][(int)(x + col[0] * 2) / 64] != '1')
+	{
+		if (col[0] > 0
+			&& game->map->map[(int)(y) / 64][(int)(x + 10) / 64] != '1')
+			t = 1;
+		else if (col[0] < 0
+			&& game->map->map[(int)(y) / 64][(int)(x - 10) / 64] != '1')
+			t = 1;
+		else if (col[0] > 0
+			&& game->map->map[(int)(y) / 64][(int)(x + 10) / 64] != '1')
+			t = 1;
+		else if (col[0] < 0
+			&& game->map->map[(int)(y) / 64][(int)(x - 10) / 64] != '1')
+			t = 1;
+	}
+	if (t)
+		game->player->x_pos += col[0] * 4;
+	collision_y(game, col, game->player->x_pos, game->player->y_pos);
+}
 
 static void	ft_movement(t_game *game)
 {
-	if (mlx_is_key_down(game->mlx, MLX_KEY_W)/* && collision(game, game->player->x_pos -= 2 * -cos(game->player->angle), game->player->y_pos -= 2 * -sin(game->player->angle))*/)
+	float	col[2];
+
+	col[0] = 0;
+	col[1] = 0;
+	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
 	{
-		game->player->x_pos -= 4 * -cos(game->player->angle);
-		game->player->y_pos -= 4 * -sin(game->player->angle);
+		col[0] += 1 * cos(game->player->angle);
+		col[1] += 1 * sin(game->player->angle);
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
 	{
-		game->player->x_pos += 4 * -cos(game->player->angle);
-		game->player->y_pos += 4 * -sin(game->player->angle);
+		col[0] += 1 * -cos(game->player->angle);
+		col[1] += 1 * -sin(game->player->angle);
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
 	{
-		game->player->x_pos -= 4 * -sin(game->player->angle);
-		game->player->y_pos -= 4 * cos(game->player->angle);
+		col[0] += 1 * sin(game->player->angle);
+		col[1] += 1 * -cos(game->player->angle);
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
 	{
-		game->player->x_pos += 4 * -sin(game->player->angle);
-		game->player->y_pos += 4 * cos(game->player->angle);
+		col[0] += 1 * -sin(game->player->angle);
+		col[1] += 1 * cos(game->player->angle);
 	}
+	collision_x(game, col, game->player->x_pos, game->player->y_pos);
+	// game->player->y_pos += col[1] * 4;
+	// game->player->x_pos += col[0] * 4;
 }
 
-void	ft_hook(void* param)
+void	ft_hook(void *param)
 {
 	t_game	*game;
 

@@ -6,38 +6,38 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:18:40 by velbling          #+#    #+#             */
-/*   Updated: 2024/05/04 15:56:14 by velbling         ###   ########.fr       */
+/*   Updated: 2024/05/25 18:45:01 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void ft_init_map(void* param)
+void	ft_init_map(void *param)
 {
-	t_game *game;
+	t_game	*game;
+	int		x;
+	int		y;
 
 	game = param;
-
-	for (int x = 0; game->map->map[x]; x++)
+	x = 0;
+	y = 0;
+	while (game->map->map[y])
 	{
-		for (int y = 0; game->map->map[x][y]; y++)
+		while (game->map->map[x][y])
 		{
-			// if (game->map->map[x][y] == '1')
-			// {
-			// 	spread_pixels(game, y * 64, x * 64, 0xFFAA00FF);
-			// }
-			if (game->map->map[x][y] == 'E')
+			if (game->map->map[y][x] == 'E')
 			{
 				game->player->x_pos = (y * 64) + 24;
 				game->player->y_pos = (x * 64) + 24;
 				game->player->angle = 0;
-				// init_player_pos(game);
 			}
+			x++;
 		}
+		y++;
 	}
 }
 
-void	ft_load_png(t_game * game)
+void	ft_load_png(t_game *game)
 {
 	game->n_txt = mlx_load_png(game->map->path_n);
 	game->s_txt = mlx_load_png(game->map->path_s);

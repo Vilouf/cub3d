@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   check_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktaplin <ktaplin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 11:41:12 by ktaplin           #+#    #+#             */
-/*   Updated: 2023/03/15 19:01:27 by ktaplin          ###   ########.fr       */
+/*   Updated: 2024/05/25 18:37:58 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-int start_pos(int pos, t_game *game, char c)
+int	start_pos(int pos, t_game *game, char c)
 {
 	if (c == 'N')
 		game->player->angle = 3 * M_PI / 2;
@@ -34,7 +34,7 @@ void	quick_check(t_game *game)
 
 	pos = 0;
 	game->map->y = 0;
-	c = 0; //HERE C TO MODIFY MAYBE (Faites le !)
+	c = 0;
 	while (game->map->y_size > game->map->y)
 	{
 		game->map->x = 0;

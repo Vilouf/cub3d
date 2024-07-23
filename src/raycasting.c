@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:22:10 by velbling          #+#    #+#             */
-/*   Updated: 2024/05/04 15:13:57 by velbling         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:46:36 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,8 @@ uint32_t	get_text_img(t_game *game, int wHeight, float wallSize, float x)
 
 void	ft_cast_ray(t_game *game, float ray_length, int ray_pos)
 {
-	// float	wall_top, wall_bottom;
-	float wall_size;
-	float d_wall_size;
+	float	wall_size;
+	float	d_wall_size;
 
 	(void) game;
 	if (ray_pos >= 960)
@@ -74,8 +73,9 @@ float	next_point(t_game *game, float angle, char point)
 void	ft_gendarmes(t_game *game)
 {
 	if (fabs(game->ray->last_ray
-			- (dist(game->player->x_pos, game->player->y_pos, game->ray->x, game->ray->y)
-			* cos(game->player->angle - game->ray->angle))) < 50)
+			- (dist(game->player->x_pos, game->player->y_pos,
+					game->ray->x, game->ray->y)
+				* cos(game->player->angle - game->ray->angle))) < 50)
 	{
 		game->ray->jsp = fabs(game->ray->last_x - game->ray->x)
 			< fabs(game->ray->last_y - game->ray->y);

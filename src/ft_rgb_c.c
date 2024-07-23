@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 11:48:00 by ktaplin           #+#    #+#             */
-/*   Updated: 2024/05/04 16:13:32 by velbling         ###   ########.fr       */
+/*   Updated: 2024/07/05 14:52:36 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	set_color_c(char *number, int cpt, t_game *game)
 {
 	if (number == NULL)
 		exit(42);
-	printf("2222 : number|%s\n", number);
 	if (cpt == 1)
 		game->ceiling_r = ft_atoi(number);
 	else if (cpt == 2)
@@ -74,7 +73,7 @@ int	ceiling(char *str, int i, t_game *game, int n)
 	number[1] = 0;
 	number[2] = 0;
 	number[3] = 0;
-	number[4] = 0; // tableau contenant random data !
+	number[4] = 0;
 	i++;
 	while (str[i] == ' '){
 		i++;

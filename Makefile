@@ -6,7 +6,7 @@
 #    By: velbling <velbling@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 15:15:30 by velbling          #+#    #+#              #
-#    Updated: 2024/05/04 15:05:01 by velbling         ###   ########.fr        #
+#    Updated: 2024/05/14 15:02:32 by velbling         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,8 +31,8 @@ FILES = main \
 		movement \
 		raycasting_bis
 
-#MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -framework Cocoa -framework OpenGL -framework IOKit
-MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -lm#-framework Cocoa -framework OpenGL -framework IOKit
+
+MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -lm
 
 SRC = $(addprefix src/, $(addsuffix .c, $(FILES)))
 
