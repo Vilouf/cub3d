@@ -1,134 +1,16 @@
- #include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/27 18:49:52 by velbling          #+#    #+#             */
+/*   Updated: 2024/07/27 21:05:19 by velbling         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-float	dist(float x1, float y1, float x2, float y2)
-{
-	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
-}
-
-int	choose_texture(t_game *game, float angle)
-{
-	if (!game->ray->jsp)
-	{
-		if (angle > 0 && angle < M_PI)
-			game->current_txt = game->s_txt;
-		else
-			game->current_txt = game->n_txt;
-	}
-	else
-	{
-		if (angle > M_PI / 2 && angle < 3 * M_PI / 2)
-			game->current_txt = game->w_txt;
-		else
-			game->current_txt = game->e_txt;
-	}
-	return (1);
-}
-
-void 	put_image(void* param)
-{
-	t_game *game;
-
-	game = param;
-	mlx_delete_image(game->mlx, game->image);
-	game->image = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	game->ray->angle = game->player->angle - 30 * (M_PI / 180) - (M_PI / 180);
-	game->ray->length = 0;
-	int	invisible_ray = 0;
-	int		ray_pos = 0;
-	int k = 0;
-	static int debug;
-	// printf("NOUVEL IMAGE\n");
-	while (ray_pos < WIDTH)
-	{
-		k = 0;
-		game->ray->x = game->player->x_pos;
-		game->ray->y = game->player->y_pos;
-		if (game->ray->angle < 0)
-			game->ray->angle += 2 * M_PI;
-		if (game->ray->angle > 2 * M_PI)
-			game->ray->angle -= 2 * M_PI;
-		if (ray_pos == WIDTH / 2)
-			// printf("--------------------------------------------------------\n");
-		debug = 0;
-		while (game->map->map[(int)((game->ray->y / 64) + 0.001)][(int)((game->ray->x / 64) + 0.001)] != '1' && game->map->map[(int)((game->ray->y / 64) - 0.001)][(int)((game->ray->x / 64) - 0.001)] != '1' \
-				&& game->map->map[(int)((game->ray->y / 64) - 0.001)][(int)((game->ray->x / 64) + 0.001)] != '1' && game->map->map[(int)((game->ray->y / 64) + 0.001)][(int)((game->ray->x / 64) - 0.001)] != '1')
-		{
-				game->ray->x += cos(game->ray->angle) * 0.1;
-				game->ray->y += sin(game->ray->angle) * 0.1;
-				debug++;
-		}
-		// printf("debug = %i\n", debug);
-		game->ray->length = dist(game->player->x_pos, game->player->y_pos, game->ray->x, game->ray->y);
-		game->ray->length *= cos(game->player->angle - game->ray->angle);
-		if (invisible_ray == 1)
-		{
-			ft_gendarmes(game);
-			game->wall_color = choose_texture(game, game->ray->angle);
-			while (k < 8 && invisible_ray)
-				ft_cast_ray(game, game->ray->length, ray_pos+(k++));
-			ray_pos += k;
-		}
-		save(game);
-		game->ray->angle += M_PI / 360;
-		invisible_ray = 1;
-	}
-	mlx_image_to_window(game->mlx, game->image, 0, 0);
-}
-
-
-
-// int main(int argc, char* argv[])
-// {
-// 	t_game	game;
-
-// 	game.map = malloc (sizeof(t_map));
-// 	game.player = malloc (sizeof(t_player));
-// 	game.ray = malloc (sizeof(t_ray));
-// 	game.argv = argv;
-// 	game.argc = argc;
-// 	game.map->x = 0;
-// 	game.map->y = 0;
-// 	game.map->x_size = 0;
-// 	game.map->y_size = 0;
-// 	ft_load_png(&game);
-
-// 	map(&game);
-
-// 	for (int i = 0; game.map->map[i]; i++)
-// 	{
-// 		for (int j = 0; game.map->map[i][j]; j++)
-// 		{
-// 			printf("%c", game.map->map[i][j]);
-// 		}
-// 		printf("\n");
-// 	}
-
-// 	// Gotta error check this stuff
-// 	if (!(game.mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
-// 	{
-// 		puts(mlx_strerror(mlx_errno));
-// 		return(EXIT_FAILURE);
-// 	}
-// 	if (!(game.image = mlx_new_image(game.mlx, WIDTH, HEIGHT)))
-// 	{
-// 		mlx_close_window(game.mlx);
-// 		puts(mlx_strerror(mlx_errno));
-// 		return(EXIT_FAILURE);
-// 	}
-// 	if (mlx_image_to_window(game.mlx, game.image, 0, 0) == -1)
-// 	{
-// 		mlx_close_window(game.mlx);
-// 		puts(mlx_strerror(mlx_errno));
-// 		return(EXIT_FAILURE);
-// 	}
-
-// 	ft_init_map(&game);
-
-// 	mlx_loop_hook(game.mlx, ft_hook, &game);
-// 	mlx_loop(game.mlx);
-// 	mlx_terminate(game.mlx);
-// 	return (EXIT_SUCCESS);
-// }
+#include "cub3d.h"
 
 void	check_extension_img(char *str, t_game *game)
 {

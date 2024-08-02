@@ -6,7 +6,7 @@
 #    By: velbling <velbling@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 15:15:30 by velbling          #+#    #+#              #
-#    Updated: 2024/05/14 15:02:32 by velbling         ###   ########.fr        #
+#    Updated: 2024/07/27 19:05:00 by velbling         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,8 @@ FILES = main \
 		init \
 		raycasting \
 		movement \
-		raycasting_bis
+		raycasting_bis \
+		rays
 
 
 MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -lm

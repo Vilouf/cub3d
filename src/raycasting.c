@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:22:10 by velbling          #+#    #+#             */
-/*   Updated: 2024/07/14 18:46:36 by velbling         ###   ########.fr       */
+/*   Updated: 2024/07/28 18:19:50 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ uint32_t	get_text_img(t_game *game, int wHeight, float wallSize, float x)
 	if (x >= game->current_txt->width)
 		x = (int)floor(x) % game->current_txt->width + (floor(x) - x);
 	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
-			* 4 + (wHeight * game->current_txt->height * 4)] << 24);
+			*4 + (wHeight * game->current_txt->height * 4)] << 24);
 	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
-			* 4 + (wHeight * game->current_txt->height * 4) + 1] << 16);
+			*4 + (wHeight * game->current_txt->height * 4) + 1] << 16);
 	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
-			* 4 + (wHeight * game->current_txt->height * 4) + 2] << 8);
+			*4 + (wHeight * game->current_txt->height * 4) + 2] << 8);
 	color = color | (pix_tab[(int)((game->current_txt->width * (x - floor(x))))
-			* 4 + (wHeight * game->current_txt->height * 4) + 3]);
+			*4 + (wHeight * game->current_txt->height * 4) + 3]);
 	return (color);
 }
 

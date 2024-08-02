@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:32:51 by velbling          #+#    #+#             */
-/*   Updated: 2024/05/04 15:13:13 by velbling         ###   ########.fr       */
+/*   Updated: 2024/07/27 19:03:45 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ void	ft_hook(void* param);
 float	dist(float x1, float y1, float x2, float y2);
 void 	put_image(void* param);
 void    ft_cast_ray_bis(t_game *game, float ws, float d_ws, int ray_pos);
+void 	put_image(void* param);
 
 //kiwi
 

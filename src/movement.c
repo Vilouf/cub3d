@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 19:01:33 by velbling          #+#    #+#             */
-/*   Updated: 2024/07/14 18:45:47 by velbling         ###   ########.fr       */
+/*   Updated: 2024/07/28 18:31:56 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,17 @@ void	collision_y(t_game *game, float col[2], float x, float y)
 	t = 0;
 	if (game->map->map[(int)(y + col[1] * 2) / 64][(int)(x) / 64] != '1')
 	{
-		if (col[1] > 0 
-			&& game->map->map[(int)(y + 10) / 64][(int)(x) / 64] != '1')
+		if (col[1] > 0
+			&& game->map->map[(int)(y + 20) / 64][(int)(x) / 64] != '1')
 			t = 1;
 		else if (col[1] > 0
-			&& game->map->map[(int)(y + 10) / 64][(int)(x) / 64] != '1')
+			&& game->map->map[(int)(y + 20) / 64][(int)(x) / 64] != '1')
 			t = 1;
 		else if (col[1] < 0
-			&& game->map->map[(int)(y - 10) / 64][(int)(x) / 64] != '1')
+			&& game->map->map[(int)(y - 20) / 64][(int)(x) / 64] != '1')
 			t = 1;
 		else if (col[1] < 0
-			&& game->map->map[(int)(y - 10) / 64][(int)(x) / 64] != '1')
+			&& game->map->map[(int)(y - 20) / 64][(int)(x) / 64] != '1')
 			t = 1;
 	}
 	if (t)
@@ -54,16 +54,16 @@ void	collision_x(t_game *game, float col[2], float x, float y)
 	if (game->map->map[(int)(y) / 64][(int)(x + col[0] * 2) / 64] != '1')
 	{
 		if (col[0] > 0
-			&& game->map->map[(int)(y) / 64][(int)(x + 10) / 64] != '1')
+			&& game->map->map[(int)(y) / 64][(int)(x + 20) / 64] != '1')
 			t = 1;
 		else if (col[0] < 0
-			&& game->map->map[(int)(y) / 64][(int)(x - 10) / 64] != '1')
+			&& game->map->map[(int)(y) / 64][(int)(x - 20) / 64] != '1')
 			t = 1;
 		else if (col[0] > 0
-			&& game->map->map[(int)(y) / 64][(int)(x + 10) / 64] != '1')
+			&& game->map->map[(int)(y) / 64][(int)(x + 20) / 64] != '1')
 			t = 1;
 		else if (col[0] < 0
-			&& game->map->map[(int)(y) / 64][(int)(x - 10) / 64] != '1')
+			&& game->map->map[(int)(y) / 64][(int)(x - 20) / 64] != '1')
 			t = 1;
 	}
 	if (t)
@@ -98,8 +98,6 @@ static void	ft_movement(t_game *game)
 		col[1] += 1 * cos(game->player->angle);
 	}
 	collision_x(game, col, game->player->x_pos, game->player->y_pos);
-	// game->player->y_pos += col[1] * 4;
-	// game->player->x_pos += col[0] * 4;
 }
 
 void	ft_hook(void *param)
