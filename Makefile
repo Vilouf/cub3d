@@ -6,7 +6,7 @@
 #    By: velbling <velbling@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 15:15:30 by velbling          #+#    #+#              #
-#    Updated: 2024/07/27 19:05:00 by velbling         ###   ########.fr        #
+#    Updated: 2024/08/10 18:53:16 by velbling         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,9 @@ FILES = main \
 		raycasting \
 		movement \
 		raycasting_bis \
-		rays
+		rays \
+		collisions_bis_x \
+		collisions_bis_y
 
 
 MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -lm
@@ -62,3 +64,6 @@ run:
 	./$(NAME) maps/test.cub
 
 re: fclean all
+
+norminette:
+	norminette includes src

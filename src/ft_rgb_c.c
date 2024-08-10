@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 11:48:00 by ktaplin           #+#    #+#             */
-/*   Updated: 2024/07/05 14:52:36 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/10 19:10:56 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,17 @@
 
 void	set_color_c(char *number, int cpt, t_game *game)
 {
-	if (number == NULL)
-		exit(42);
 	if (cpt == 1)
 		game->ceiling_r = ft_atoi(number);
-	else if (cpt == 2)
+	if (cpt == 2)
 		game->ceiling_g = ft_atoi(number);
-	else if (cpt == 3)
+	if (cpt == 3)
 		game->ceiling_b = ft_atoi(number);
-	// else
-	// 	exit(18);
 }
 
 int	ceiling_utils_two(t_game *game, char *number)
 {
-	//TO MODIFY
+	game->j_rgb++;
 	if (game->j_rgb > 3)
 	{
 		free(number);
@@ -41,20 +37,22 @@ int	ceiling_utils_three(t_game *game, int i, char *number, char *str)
 {
 	number[game->j_rgb] = str[i];
 	i++;
-	game->j_rgb++;
-	ceiling_utils_two(game, number);
+	game->j_rgb = ceiling_utils_two(game, number);
 	return (i);
 }
 
-char	*ceiling_utils(char *number, int cpt)
+char	*ceiling_utils(char *number, int cpt, t_game *game)
 {
 	if (cpt < 3)
 	{
 		free (number);
 		number = malloc(sizeof (char) * 5);
-		if (number == NULL){
-			exit(42);
-		}
+		if (number == NULL)
+			error("Error in malloc", game);
+		number[0] = 0;
+		number[1] = 0;
+		number[2] = 0;
+		number[3] = 0;
 		number[4] = 0;
 	}
 	return (number);
@@ -67,26 +65,16 @@ int	ceiling(char *str, int i, t_game *game, int n)
 
 	cpt = check_fc(str, 'C', game);
 	number = malloc(sizeof (char) * 5);
-	if (number == NULL)
-		exit(1);
-	number[0] = 0;
-	number[1] = 0;
-	number[2] = 0;
-	number[3] = 0;
-	number[4] = 0;
-	i++;
-	while (str[i] == ' '){
-		i++;
-	}
+	ft_check_malloc(number, game);
+	while (str[++i] == ' ')
+		;
 	while (str[i] && str[i] != '\n')
 	{	
-		while (ft_isdigit(str[i]) == 0){
+		while (ft_isdigit(str[i]) == 0)
 			i = ceiling_utils_three(game, i, number, str);
-		}
 		game->j_rgb = 0;
-		// exit (1);
 		set_color_c(number, ++cpt, game);
-		number = ceiling_utils(number, cpt);
+		number = ceiling_utils(number, cpt, game);
 		while (str[i] == ' ')
 			i++;
 		if (str[i] == ',')

@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:49:52 by velbling          #+#    #+#             */
-/*   Updated: 2024/07/27 21:05:19 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/10 20:02:18 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,6 @@ int	main(int argc, char	**argv)
 	mlx_loop_hook(game.mlx, ft_hook, &game);
 	mlx_loop(game.mlx);
 	mlx_terminate(game.mlx);
-	free(game.map->path_n);
-	free(game.map->path_s);
-	free(game.map->path_e);
-	free(game.map->path_w);
-	freetab(game.map->map);
-	free(game.map);
-	free(game.player);
+	free_utils(&game);
 	return (EXIT_SUCCESS);
 }

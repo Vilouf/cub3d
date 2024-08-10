@@ -6,146 +6,44 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 19:01:33 by velbling          #+#    #+#             */
-/*   Updated: 2024/08/06 19:21:47 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/10 19:49:01 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void collision_y(t_game *game, float col[2], float x, float y)
+void	collision_y(t_game *game, float col[2], float x, float y)
 {
-    int t = 0;
+	int	t;
 
-    // Vérifie les quatre coins et les positions adjacentes pour les collisions potentielles en Y
-    if (game->map->map[(int)(y + (col[1] * 4)) / 64][(int)(x) / 64] != '1' &&
-        game->map->map[(int)(y + (col[1] * 4)) / 64][(int)(x + 24) / 64] != '1' &&
-        game->map->map[(int)(y + (col[1] * 4)) / 64][(int)(x - 24) / 64] != '1' &&
-        game->map->map[(int)(y + (col[1] * 4)) / 64][(int)(x + 12) / 64] != '1' &&
-        game->map->map[(int)(y + (col[1] * 4)) / 64][(int)(x - 12) / 64] != '1')
-    {
-        // Vérifie les collisions potentielles près de la boîte englobante du joueur
-        if (col[1] > 0 && (game->map->map[(int)(y + (col[1] * 4) + 25) / 64][(int)(x) / 64] == '1' ||
-                           game->map->map[(int)(y + (col[1] * 4) + 25) / 64][(int)(x + 24) / 64] == '1' ||
-                           game->map->map[(int)(y + (col[1] * 4) + 25) / 64][(int)(x - 24) / 64] == '1' ||
-                           game->map->map[(int)(y + (col[1] * 4) + 25) / 64][(int)(x + 12) / 64] == '1' ||
-                           game->map->map[(int)(y + (col[1] * 4) + 25) / 64][(int)(x - 12) / 64] == '1'))
-        {
-            t = 1;
-        }
-        if (col[1] < 0 && (game->map->map[(int)(y + (col[1] * 4) - 25) / 64][(int)(x) / 64] == '1' ||
-                           game->map->map[(int)(y + (col[1] * 4) - 25) / 64][(int)(x + 24) / 64] == '1' ||
-                           game->map->map[(int)(y + (col[1] * 4) - 25) / 64][(int)(x - 24) / 64] == '1' ||
-                           game->map->map[(int)(y + (col[1] * 4) - 25) / 64][(int)(x + 12) / 64] == '1' ||
-                           game->map->map[(int)(y + (col[1] * 4) - 25) / 64][(int)(x - 12) / 64] == '1'))
-        {
-            t = 1;
-        }
-    }
-
-    // Si aucune collision n'est détectée, met à jour la position y du joueur
-    if (!t)
-        game->player->y_pos += 4 * col[1];
+	t = 0;
+	if (check_wall_y(game, col, y, x))
+	{
+		if (check_col_y_positive(game, col, y, x))
+			t = 1;
+		if (check_col_y_negative(game, col, y, x))
+			t = 1;
+	}
+	if (!t)
+		game->player->y_pos += 4 * col[1];
 }
 
-void collision_x(t_game *game, float col[2], float x, float y)
+void	collision_x(t_game *game, float col[2], float x, float y)
 {
-    int t = 0;
+	int	t;
 
-    // Vérifie les quatre coins et les positions adjacentes pour les collisions potentielles en X
-    if (game->map->map[(int)(y) / 64][(int)(x + (col[0] * 4)) / 64] != '1' &&
-        game->map->map[(int)(y + 24) / 64][(int)(x + (col[0] * 4)) / 64] != '1' &&
-        game->map->map[(int)(y - 24) / 64][(int)(x + (col[0] * 4)) / 64] != '1' &&
-        game->map->map[(int)(y + 12) / 64][(int)(x + (col[0] * 4)) / 64] != '1' &&
-        game->map->map[(int)(y - 12) / 64][(int)(x + (col[0] * 4)) / 64] != '1')
-    {
-        // Vérifie les collisions potentielles près de la boîte englobante du joueur
-        if (col[0] > 0 && (game->map->map[(int)(y) / 64][(int)(x + (col[0] * 4) + 25) / 64] == '1' ||
-                           game->map->map[(int)(y + 24) / 64][(int)(x + (col[0] * 4) + 25) / 64] == '1' ||
-                           game->map->map[(int)(y - 24) / 64][(int)(x + (col[0] * 4) + 25) / 64] == '1' ||
-                           game->map->map[(int)(y + 12) / 64][(int)(x + (col[0] * 4) + 25) / 64] == '1' ||
-                           game->map->map[(int)(y - 12) / 64][(int)(x + (col[0] * 4) + 25) / 64] == '1'))
-        {
-            t = 1;
-        }
-        else if (col[0] < 0 && (game->map->map[(int)(y) / 64][(int)(x + (col[0] * 4) - 25) / 64] == '1' ||
-                                game->map->map[(int)(y + 24) / 64][(int)(x + (col[0] * 4) - 25) / 64] == '1' ||
-                                game->map->map[(int)(y - 24) / 64][(int)(x + (col[0] * 4) - 25) / 64] == '1' ||
-                                game->map->map[(int)(y + 12) / 64][(int)(x + (col[0] * 4) - 25) / 64] == '1' ||
-                                game->map->map[(int)(y - 12) / 64][(int)(x + (col[0] * 4) - 25) / 64] == '1'))
-        {
-            t = 1;
-        }
-    }
-
-    // Si aucune collision n'est détectée, met à jour la position x du joueur
-    if (!t)
-        game->player->x_pos += 4 * col[0];
-
-    // Vérifie les collisions potentielles dans la direction y après avoir mis à jour la position x
-    collision_y(game, col, game->player->x_pos, game->player->y_pos);
+	t = 0;
+	if (check_wall_x(game, col, y, x))
+	{
+		if (check_col_x_positive(game, col, y, x))
+			t = 1;
+		if (check_col_x_negative(game, col, y, x))
+			t = 1;
+	}
+	if (!t)
+		game->player->x_pos += 4 * col[0];
+	collision_y(game, col, game->player->x_pos, game->player->y_pos);
 }
-
-// void	collision_y(t_game *game, float col[2], float x, float y)
-// {
-// 	int		t;
-
-// 	t = 0;
-// 	if (game->map->map[(int)(y + col[1] * 2) / 64][(int)(x) / 64] != '1')
-// 	{
-// 		if (col[1] > 0 && game->map->map[(int)(y + 25) / 64][(int)(x) / 64] == '1')
-// 			t = 1;
-// 		if (col[1] < 0 && game->map->map[(int)(y - 25) / 64][(int)(x) / 64] == '1')
-// 			t = 1;
-// 	}
-// 	if (!t)
-// 		game->player->y_pos += col[1] * 4;
-// }
-
-// void	collision_x(t_game *game, float col[2], float x, float y)
-// {
-// 	int		t;
-
-// 	t = 0;
-// 	if (game->map->map[(int)(y) / 64][(int)(x + col[0] * 2) / 64] != '1')
-// 	{
-// 		if (col[0] > 0 && game->map->map[(int)(y) / 64][(int)(x + 25) / 64] == '1')
-// 			t = 1;
-// 		else if (col[0] < 0 && game->map->map[(int)(y) / 64][(int)(x - 25) / 64] == '1')
-// 			t = 1;
-// 	}
-// 	if (!t)
-// 		game->player->x_pos += col[0] * 4;
-// 	collision_y(game, col, game->player->x_pos, game->player->y_pos);
-// }
-
-
-// void	collision(t_game *game, float col[2], float x, float y)
-// {
-// 	int		t;
-
-// 	t = 0;
-// 	// printf("%d, %d\n", (int)((y / 64) + col[1]), (int)((x / 64) + col[0]));
-// 	if (game->map->map[(int)((y / 64) + col[1])][(int)((x / 64) + col[0])] != '1')
-// 	{
-// 		if (col[0] > 0 && col[1] > 0
-// 			&& game->map->map[(int)((y / 64))][(int)((x / 64))] != '1')
-// 			t = 1;
-// 		else if (col[0] < 0 && col[1] > 0
-// 			&& game->map->map[(int)((y / 64))][(int)((x / 64))] != '1')
-// 			t = 1;
-// 		else if (col[0] > 0 && col[1] < 0
-// 			&& game->map->map[(int)((y / 64))][(int)((x / 64))] != '1')
-// 			t = 1;
-// 		else if (col[0] < 0 && col[1] < 0
-// 			&& game->map->map[(int)((y / 64))][(int)((x / 64))] != '1')
-// 			t = 1;
-// 	}
-// 	if (t)
-// 	{
-// 		game->player->x_pos += 3 * col[0];
-// 		game->player->y_pos += 3 * col[1];
-// 	}
-// }
 
 static void	ft_movement(t_game *game)
 {
