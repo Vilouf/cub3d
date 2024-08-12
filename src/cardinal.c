@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cardinal.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktaplin <ktaplin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 11:41:12 by ktaplin           #+#    #+#             */
-/*   Updated: 2023/03/15 19:01:27 by ktaplin          ###   ########.fr       */
+/*   Updated: 2024/08/12 18:42:42 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	north(char *str, int i, int n, t_game *game)
 	i += 2;
 	while (str[i] == ' ')
 		i++;
-	path = malloc(sizeof (char) * (j - i) + 1);
+	path = malloc(sizeof (char) * (j - i));
 	path = ft_strcpy(str, path, i);
 	if (open(path, O_RDONLY) != -1)
 	{
@@ -54,7 +54,7 @@ int	south(char *str, int i, int n, t_game *game)
 	i += 2;
 	while (str[i] == ' ')
 		i++;
-	path = malloc(sizeof (char) * (j - i) + 1);
+	path = malloc(sizeof (char) * (j - i));
 	path = ft_strcpy(str, path, i);
 	if (open(path, O_RDONLY) != -1)
 	{
@@ -83,7 +83,7 @@ int	east(char *str, int i, int n, t_game *game)
 	i += 2;
 	while (str[i] == ' ')
 		i++;
-	path = malloc(sizeof (char) * (j - i) + 1);
+	path = malloc(sizeof (char) * (j - i));
 	path = ft_strcpy(str, path, i);
 	if (open(path, O_RDONLY) != -1)
 	{
@@ -112,7 +112,7 @@ int	west(char *str, int i, int n, t_game *game)
 	i += 2;
 	while (str[i] == ' ')
 		i++;
-	path = malloc(sizeof (char) * (j - i) + 1);
+	path = malloc(sizeof (char) * (j - i));
 	path = ft_strcpy(str, path, i);
 	if (open(path, O_RDONLY) != -1)
 	{

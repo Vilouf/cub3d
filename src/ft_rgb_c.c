@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 11:48:00 by ktaplin           #+#    #+#             */
-/*   Updated: 2024/08/10 19:10:56 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/12 18:34:09 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	ceiling(char *str, int i, t_game *game, int n)
 	cpt = check_fc(str, 'C', game);
 	number = malloc(sizeof (char) * 5);
 	ft_check_malloc(number, game);
-	while (str[++i] == ' ')
+	while (str[++i] && str[i] == ' ')
 		;
 	while (str[i] && str[i] != '\n')
 	{	

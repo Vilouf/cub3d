@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 11:41:12 by ktaplin           #+#    #+#             */
-/*   Updated: 2024/05/25 18:39:39 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/12 18:49:25 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,20 @@
 void	error(char *str, t_game *game)
 {
 	printf("%s\n", str);
-	if (game->free == 1)
-		freetab(game->map->map);
-	if (game->free_n == 1)
-		free(game->map->path_n);
-	if (game->free_s == 1)
-		free(game->map->path_s);
-	if (game->free_e == 1)
-		free(game->map->path_e);
-	if (game->free_w == 1)
-		free(game->map->path_w);
-	free(game->map);
-	free(game);
+	if (game && game->map)
+	{
+		if (game->free == 1)
+			freetab(game->map->map);
+		if (game->free_n == 1 && game->map->path_n)
+			free(game->map->path_n);
+		if (game->free_s == 1 && game->map->path_s)
+			free(game->map->path_s);
+		if (game->free_e == 1 && game->map->path_e)
+			free(game->map->path_e);
+		if (game->free_w == 1 && game->map->path_w)
+			free(game->map->path_w);
+		free(game->map);
+	}
 	exit (EXIT_FAILURE);
 }
 
