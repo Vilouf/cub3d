@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 16:18:40 by velbling          #+#    #+#             */
-/*   Updated: 2024/08/12 18:34:09 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/13 20:51:35 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,14 @@ void	ft_init_map(void *param)
 	}
 }
 
-void	ft_load_png(t_game *game)
+int	ft_load_png(t_game *game)
 {
 	game->n_txt = mlx_load_png(game->map->path_n);
 	game->s_txt = mlx_load_png(game->map->path_s);
 	game->e_txt = mlx_load_png(game->map->path_e);
 	game->w_txt = mlx_load_png(game->map->path_w);
+	if (game->w_txt == NULL || game->n_txt == NULL \
+		|| game->s_txt == NULL || game->w_txt == NULL)
+		return (0);
+	return (1);
 }

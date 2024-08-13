@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 11:41:12 by ktaplin           #+#    #+#             */
-/*   Updated: 2024/08/12 18:12:16 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/13 21:59:18 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,19 @@ void	free_utils(t_game *game)
 	free(game->map->path_s);
 	free(game->map->path_e);
 	free(game->map->path_w);
-	mlx_delete_texture(game->n_txt);
-	mlx_delete_texture(game->s_txt);
-	mlx_delete_texture(game->e_txt);
-	mlx_delete_texture(game->w_txt);
+	mlx_delete_image(game->mlx, game->image);
+	if (game->w_txt)
+		mlx_delete_texture(game->w_txt);
+	if (game->n_txt)
+		mlx_delete_texture(game->n_txt);
+	if (game->e_txt)
+		mlx_delete_texture(game->e_txt);
+	if (game->s_txt)
+		mlx_delete_texture(game->s_txt);
 	freetab(game->map->map);
 	free(game->ray);
 	free(game->map);
 	free(game->player);
+	mlx_close_window(game->mlx);
+	free(game);
 }

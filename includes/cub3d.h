@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:32:51 by velbling          #+#    #+#             */
-/*   Updated: 2024/08/10 20:01:11 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/13 21:07:55 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void		ft_gendarmes(t_game *game);
 float		next_point(t_game *game, float angle, char point);
 void		ft_cast_ray(t_game *game, float ray_length, int ray_pos);
 uint32_t	get_text_img(t_game *game, int wHeight, float wallSize, float x);
-void		ft_load_png(t_game *game);
+int			ft_load_png(t_game *game);
 void		ft_hook(void *param);
 float		dist(float x1, float y1, float x2, float y2);
 void		put_image(void *param);
@@ -125,6 +125,8 @@ int			check_wall_x(t_game *game, float *col, float y, float x);
 int			check_col_x_positive(t_game *game, float *col, float y, float x);
 int			check_col_x_negative(t_game *game, float *col, float y, float x);
 void		free_utils(t_game *game);
+void		free_utils_bis(t_game *game);
+void		open_error(t_game *game, char *path, char *str, char *msg);
 
 //kiwi
 

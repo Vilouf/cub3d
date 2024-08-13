@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 11:41:12 by ktaplin           #+#    #+#             */
-/*   Updated: 2024/08/12 18:42:42 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/13 21:09:16 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ int	north(char *str, int i, int n, t_game *game)
 	}
 	else
 	{
-		free (path);
-		error("Error north path", game);
+		open_error(game, path, str, "Error north path");
 	}
 	return (n + 1);
 }
@@ -64,8 +63,7 @@ int	south(char *str, int i, int n, t_game *game)
 	}
 	else
 	{
-		free (path);
-		error("Error south path", game);
+		open_error(game, path, str, "Error south path");
 	}
 	return (n + 1);
 }
@@ -93,8 +91,7 @@ int	east(char *str, int i, int n, t_game *game)
 	}
 	else
 	{
-		free (path);
-		error("Error east path", game);
+		open_error(game, path, str, "Error east path");
 	}
 	return (n + 1);
 }
@@ -122,8 +119,7 @@ int	west(char *str, int i, int n, t_game *game)
 	}
 	else
 	{
-		free (path);
-		error("Error west path", game);
+		open_error(game, path, str, "Error east path");
 	}
 	return (n + 1);
 }

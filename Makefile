@@ -6,11 +6,11 @@
 #    By: velbling <velbling@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 15:15:30 by velbling          #+#    #+#              #
-#    Updated: 2024/08/12 19:08:41 by velbling         ###   ########.fr        #
+#    Updated: 2024/08/13 21:02:38 by velbling         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = cub3d
+NAME = cub3D
 
 FILES = main \
 		get_next_line \
@@ -25,6 +25,7 @@ FILES = main \
 		check_map \
 		check_map_borders \
 		utils \
+		utils_bis \
 		map_utils \
 		init \
 		raycasting \
@@ -39,7 +40,7 @@ MLX = MLX42/build/libmlx42.a -L "/Users/$$USER/.brew/opt/glfw/lib/" -lglfw -lm
 
 SRC = $(addprefix src/, $(addsuffix .c, $(FILES)))
 
-GFLAG = -Wall -Wextra -Werror -fsanitize=address -g3
+GFLAG = -Wall -Wextra -Werror #-fsanitize=address -g3
 
 OBJ = $(SRC:.c=.o)
 

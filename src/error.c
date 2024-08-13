@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 11:41:12 by ktaplin           #+#    #+#             */
-/*   Updated: 2024/08/12 18:49:25 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/13 21:56:41 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,12 @@ void	error(char *str, t_game *game)
 			free(game->map->path_e);
 		if (game->free_w == 1 && game->map->path_w)
 			free(game->map->path_w);
-		free(game->map);
 	}
+	free(game->map);
+	free(game->player);
+	free(game->ray);
+	if (game)
+		free(game);
 	exit (EXIT_FAILURE);
 }
 

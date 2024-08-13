@@ -6,7 +6,7 @@
 /*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:49:52 by velbling          #+#    #+#             */
-/*   Updated: 2024/08/12 19:07:46 by velbling         ###   ########.fr       */
+/*   Updated: 2024/08/13 21:50:02 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,23 +78,27 @@ void	set_value(t_game *game, int argc, char	**argv)
 
 int	main(int argc, char	**argv)
 {
-	t_game	game;
+	t_game	*game;
 	int		i;
 
-	game.map = malloc (sizeof(t_map));
-	game.player = malloc (sizeof(t_player));
-	game.ray = malloc (sizeof(t_ray));
-	set_value(&game, argc, argv);
-	check_extension(argv[1], &game);
-	i = parsing(&game);
-	before_check_img(&game);
-	check_rgb(&game);
-	map(&game, i);
-	ft_load_png(&game);
-	error_check(&game);
-	mlx_loop_hook(game.mlx, ft_hook, &game);
-	mlx_loop(game.mlx);
-	mlx_terminate(game.mlx);
-	free_utils(&game);
+	game = malloc(sizeof(t_game));
+	game->map = malloc (sizeof(t_map));
+	game->player = malloc (sizeof(t_player));
+	game->ray = malloc (sizeof(t_ray));
+	set_value(game, argc, argv);
+	check_extension(argv[1], game);
+	i = parsing(game);
+	before_check_img(game);
+	check_rgb(game);
+	map(game, i);
+	if (ft_load_png(game))
+	{
+		error_check(game);
+		mlx_loop_hook(game->mlx, ft_hook, game);
+		mlx_loop(game->mlx);
+		free_utils(game);
+	}
+	else
+		free_utils_bis(game);
 	return (EXIT_SUCCESS);
 }

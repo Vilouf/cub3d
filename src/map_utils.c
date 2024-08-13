@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktaplin <ktaplin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 11:41:12 by ktaplin           #+#    #+#             */
-/*   Updated: 2023/03/15 19:01:27 by ktaplin          ###   ########.fr       */
+/*   Updated: 2024/08/13 21:25:08 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,22 @@ int	line_empty(char *str)
 	return (0);
 }
 
+void	check_letters(char *str, char cf, t_game *game)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != cf)
+		i++;
+	i++;
+	while (str[i] != '\0')
+	{
+		if ((str[i] >= 65 && str[i] <= 90) || (str[i] >= 97 && str[i] <= 122))
+			error("Error wrong character", game);
+		i++;
+	}
+}
+
 int	check_fc(char *str, char cf, t_game *game)
 {
 	int	nb;
@@ -48,6 +64,7 @@ int	check_fc(char *str, char cf, t_game *game)
 	while (str[i] != cf)
 		i++;
 	i++;
+	check_letters(str, cf, game);
 	while (str[i])
 	{
 		if ((str[i] >= 65 && str[i] <= 90) || (str[i] >= 97 && str[i] <= 122))

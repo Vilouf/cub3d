@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktaplin <ktaplin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: velbling <velbling@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 11:41:12 by ktaplin           #+#    #+#             */
-/*   Updated: 2023/03/15 19:01:27 by ktaplin          ###   ########.fr       */
+/*   Updated: 2024/08/13 18:54:43 by velbling         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
-char	*map_size_utils(t_game *game, int fd, char *tmp)
+void	map_size_utils(t_game *game, int fd, char *tmp)
 {
 	int	i;
 
@@ -28,7 +28,7 @@ char	*map_size_utils(t_game *game, int fd, char *tmp)
 		tmp = get_next_line(fd);
 		i = 0;
 	}
-	return (tmp);
+	free(tmp);
 }
 
 void	map_size(t_game *game, int n)
@@ -48,8 +48,7 @@ void	map_size(t_game *game, int n)
 		tmp = get_next_line(fd);
 		i++;
 	}
-	tmp = map_size_utils(game, fd, tmp);
-	free(tmp);
+	map_size_utils(game, fd, tmp);
 	close(fd);
 }
 
